@@ -1,393 +1,311 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIZZBUZZ SUBMISSION | Astra 11.0</title>
-    <!-- Google Fonts for Among Us / Sci-Fi style -->
+    <title>FIZZBUZZ RULES | Astra 11.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-    
     <style>
-        /* Color Palette Setup */
-        :root {
-            --bg-black: #08070b;
-            --dark-grey: #16151d;
-            --cherry-red: #c00d2e;
-            --crimson-red: #ff1e43;
-            --violet: #6b21a8;
-            --deep-blue: #0d1b2a;
-            --cyan-accent: #00f0ff;
-            --green-accent: #00ff66;
-            --text-light: #f3f4f6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Rajdhani', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-black);
-            color: var(--text-light);
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
-
-        /* Animated Space Canvas Background */
-        #space-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -1;
-            background: radial-gradient(circle at center, #1a0b2e 0%, var(--bg-black) 80%);
-        }
-
-        /* Header / Navbar */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5%;
-            background: rgba(8, 7, 11, 0.85);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--cherry-red);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .org-branding {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            color: #aaa;
-            letter-spacing: 1px;
-        }
-
-        .org-branding span {
-            color: var(--crimson-red);
-            font-weight: bold;
-        }
-
-        /* Content Container Layout */
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* Card Panels */
-        .panel {
-            background: rgba(22, 21, 29, 0.85);
-            border: 2px solid var(--violet);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 0 15px rgba(107, 33, 168, 0.3);
-            position: relative;
-            backdrop-filter: blur(5px);
-        }
-
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--cherry-red), var(--violet), var(--deep-blue));
-        }
-
-        /* Precision Timer Card */
-        .timer-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(13, 27, 42, 0.9);
-            border: 2px solid var(--cyan-accent);
-            border-radius: 8px;
-            padding: 15px 25px;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
-        }
-
-        .timer-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            color: #aaa;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .live-dot {
-            width: 12px;
-            height: 12px;
-            background-color: var(--green-accent);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--green-accent);
-            animation: pulse-green 0.8s infinite alternate;
-        }
-
-        @keyframes pulse-green {
-            from { opacity: 0.3; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1.1); }
-        }
-
-        .timer-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.4rem;
-            font-weight: 900;
-            color: var(--green-accent);
-            text-shadow: 0 0 12px rgba(0, 255, 102, 0.7);
-            letter-spacing: 3px;
-        }
-
-        /* Task Submission Area */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .input-group label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            color: var(--cyan-accent);
-            letter-spacing: 1px;
-        }
-
-        .participant-input {
-            width: 100%;
-            background: rgba(8, 7, 11, 0.9);
-            border: 1px solid var(--violet);
-            border-radius: 6px;
-            padding: 12px;
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .participant-input:focus {
-            border-color: var(--cyan-accent);
-        }
-
-        .task-textarea {
-            width: 100%;
-            height: 260px;
-            background: rgba(8, 7, 11, 0.95);
-            border: 2px solid var(--violet);
-            border-radius: 8px;
-            padding: 15px;
-            color: var(--green-accent);
-            font-family: 'Fira Code', monospace;
-            font-size: 1rem;
-            line-height: 1.5;
-            resize: vertical;
-            outline: none;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .task-textarea:focus {
-            border-color: var(--cyan-accent);
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
-        }
-
-        /* Action Buttons */
-        .btn-group {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #c00d2e, var(--crimson-red));
-            color: #fff;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 800;
-            padding: 14px 40px;
-            border: 2px solid #000;
-            border-radius: 50px;
-            cursor: pointer;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(255, 30, 67, 0.5);
-            transition: all 0.2s ease-in-out;
-        }
-
-        .submit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(255, 30, 67, 0.8);
-            background: linear-gradient(135deg, var(--crimson-red), #ff5270);
-        }
-
-        /* Submission Confirmation Banner */
-        .status-msg {
-            display: none;
-            margin-top: 20px;
-            padding: 18px;
-            background: rgba(0, 255, 102, 0.1);
-            border: 2px solid var(--green-accent);
-            border-radius: 8px;
-            color: var(--green-accent);
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            font-size: 1.1rem;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
-        }
+        :root { --bg-black:#08070b; --dark-grey:#16151d; --cherry-red:#c00d2e; --crimson-red:#ff1e43; --violet:#6b21a8; --deep-blue:#0d1b2a; --cyan-accent:#00f0ff; --green-accent:#00ff66; --text-light:#f3f4f6; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Rajdhani',sans-serif; }
+        body { background-color:var(--bg-black); color:var(--text-light); min-height:100vh; overflow-x:hidden; }
+        #space-bg { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:-1; background:radial-gradient(circle at center,#1a0b2e 0%,var(--bg-black) 80%); }
+        header { display:flex; justify-content:space-between; align-items:center; padding:15px 5%; background:rgba(8,7,11,0.85); backdrop-filter:blur(10px); border-bottom:2px solid var(--cherry-red); position:sticky; top:0; z-index:100; }
+        .org-branding { font-family:'Orbitron',sans-serif; font-size:0.9rem; color:#aaa; letter-spacing:1px; }
+        .org-branding span { color:var(--crimson-red); font-weight:bold; }
+        .container { max-width:860px; margin:30px auto; padding:20px; display:flex; flex-direction:column; gap:22px; }
+        .panel { background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; padding:22px 24px; position:relative; overflow:hidden; }
+        .panel::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg,var(--cherry-red),var(--violet),var(--deep-blue)); }
+        .panel-title { font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--cyan-accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; }
+        .problem-text { font-family:'Fira Code',monospace; font-size:0.92rem; line-height:1.8; color:var(--text-light); background:rgba(0,0,0,0.4); border:1px solid rgba(0,240,255,0.2); border-radius:6px; padding:18px; }
+        .problem-text strong { color:var(--cyan-accent); }
+        /* Info row */
+        .info-card { background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; padding:20px 24px; position:relative; overflow:hidden; }
+        .info-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg,var(--cherry-red),var(--violet),var(--deep-blue)); }
+        .info-row { display:flex; gap:28px; flex-wrap:wrap; }
+        .info-item { display:flex; flex-direction:column; gap:3px; }
+        .info-label { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#9db5d3; }
+        .info-value { font-size:1rem; font-weight:bold; color:var(--cyan-accent); letter-spacing:1px; }
+        /* Classified mission — matches screenshot */
+        .secret-panel { background:rgba(22,8,8,0.92); border:2px solid rgba(255,30,67,0.7); border-radius:12px; overflow:hidden; position:relative; }
+        .secret-panel::before { content:''; position:absolute; top:0; left:0; width:100%; height:3px; background:linear-gradient(90deg,var(--crimson-red),#7b0015,var(--crimson-red)); }
+        .secret-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; cursor:pointer; user-select:none; gap:12px; }
+        .secret-header:hover { background:rgba(255,30,67,0.06); }
+        .secret-header-left { display:flex; align-items:center; gap:14px; }
+        .secret-icon { font-size:1.5rem; flex-shrink:0; }
+        .secret-title { font-family:'Orbitron',sans-serif; font-size:0.88rem; color:var(--crimson-red); letter-spacing:2px; text-transform:uppercase; font-weight:900; }
+        .secret-subtitle { font-size:0.78rem; color:rgba(255,180,180,0.7); margin-top:3px; letter-spacing:0.5px; }
+        .secret-chevron { font-family:'Orbitron',sans-serif; color:var(--crimson-red); font-size:1rem; flex-shrink:0; transition:transform 0.25s; }
+        .secret-chevron.open { transform:rotate(180deg); }
+        .secret-body { display:none; padding:0 20px 20px; }
+        .secret-body.open { display:block; animation:fadeSlide 0.25s ease; }
+        .secret-warning { display:flex; align-items:center; gap:12px; background:rgba(255,30,67,0.1); border:1px solid rgba(255,30,67,0.45); border-radius:8px; padding:12px 16px; margin-bottom:18px; }
+        .secret-warning-icon { font-size:1.2rem; flex-shrink:0; }
+        .secret-warning-text { font-family:'Fira Code',monospace; font-size:0.8rem; color:var(--crimson-red); letter-spacing:0.5px; line-height:1.5; }
+        .secret-steps { display:flex; flex-direction:column; gap:12px; }
+        .secret-step { display:flex; align-items:flex-start; gap:14px; }
+        .step-num { width:24px; height:24px; border-radius:50%; border:2px solid rgba(255,30,67,0.7); display:flex; align-items:center; justify-content:center; font-family:'Orbitron',sans-serif; font-size:0.68rem; color:var(--crimson-red); font-weight:900; flex-shrink:0; margin-top:2px; }
+        .step-text { font-family:'Fira Code',monospace; font-size:0.85rem; color:rgba(255,200,200,0.9); line-height:1.6; }
+        .step-text .step-note { display:block; font-size:0.72rem; color:rgba(255,150,150,0.65); margin-top:3px; }
+        /* Start button */
+        .start-btn { width:100%; padding:18px; background:linear-gradient(135deg,#c00d2e,var(--crimson-red)); color:#fff; font-family:'Orbitron',sans-serif; font-size:1.1rem; font-weight:900; letter-spacing:3px; text-transform:uppercase; border:2px solid #000; border-radius:50px; cursor:pointer; box-shadow:0 0 20px rgba(255,30,67,0.5); transition:all 0.2s; }
+        .start-btn:hover:not(:disabled) { transform:scale(1.02); box-shadow:0 0 30px rgba(255,30,67,0.8); }
+        .start-btn:disabled { opacity:0.45; cursor:not-allowed; }
+        /* Waiting / status */
+        .waiting-box { padding:22px; background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; text-align:center; }
+        .waiting-box .wt { font-family:'Orbitron',sans-serif; font-size:1.1rem; color:var(--cyan-accent); letter-spacing:2px; }
+        .waiting-box .ws { font-size:0.9rem; color:#9db5d3; margin-top:8px; }
     </style>
 </head>
 <body>
-
-    <!-- Space Canvas Animated Background -->
     <canvas id="space-bg"></canvas>
-
-    <!-- Header / Branding -->
     <header>
-        <div class="org-branding">
-            ST. JOSEPH'S COLLEGE OF ENG. & TECH. | <span>ASTRA 11.0</span>
-        </div>
-        <div class="org-branding">
-            FIZZBUZZ MODULE
-        </div>
+        <div class="org-branding">ST. JOSEPH'S COLLEGE OF ENG. &amp; TECH. | <span>ASTRA 11.0</span></div>
+        <div class="org-branding">FIZZBUZZ RULES</div>
     </header>
 
-    <!-- Main Content Container -->
     <div class="container">
-
-        <!-- Live Stopwatch Timer (MM:SS) -->
-        <div class="timer-box">
-            <span class="timer-label"><span class="live-dot" id="live-dot"></span> SUBMISSION TIMER (MM:SS):</span>
-            <span class="timer-display" id="timer">00:00</span>
+        <!-- Loading -->
+        <div id="state-loading" class="waiting-box">
+            <div class="wt">Loading...</div>
         </div>
 
-        <!-- Task Drop Area & Submission Form -->
-        <div class="panel">
-            <form id="fizzbuzz-form" onsubmit="submitTask(event)">
-                <div class="input-group">
-                    <label for="participant-id">PARTICIPANT / TEAM NAME</label>
-                    <input type="text" id="participant-id" class="participant-input" placeholder="Enter Team or Participant Name" required>
-                </div>
-
-                <div class="input-group" style="margin-top: 20px;">
-                    <label for="code-input">DROP YOUR TASK / SOLUTION HERE</label>
-                    <textarea id="code-input" class="task-textarea" placeholder="// Paste or drop your task output / code here..." required></textarea>
-                </div>
-
-                <div class="btn-group">
-                    <button type="submit" id="submit-btn" class="submit-btn">SUBMIT TASK</button>
-                </div>
-            </form>
-
-            <div id="status-msg" class="status-msg"></div>
+        <!-- FizzBuzz not open yet -->
+        <div id="state-waiting" class="waiting-box" style="display:none;">
+            <div class="wt">&#9201; FizzBuzz Not Started</div>
+            <div class="ws">Waiting for coordinator to open the FizzBuzz round. Stay on this page — it will update automatically.</div>
         </div>
 
+        <!-- Rules page (shown when open) -->
+        <div id="state-open" style="display:none;">
+            <!-- Participant info -->
+            <div class="info-card">
+                <div class="info-row">
+                    <div class="info-item"><span class="info-label">Participant</span><span class="info-value" id="info-name">--</span></div>
+                    <div class="info-item"><span class="info-label">Original Team</span><span class="info-value" id="info-team">--</span></div>
+                    <div class="info-item">
+                        <span class="info-label">Shuffled Group</span>
+                        <span class="info-value" id="info-group">--</span>
+                        <select id="info-group-select" style="display:none;background:rgba(8,7,11,0.95);border:1px solid var(--cyan-accent);border-radius:6px;padding:6px 10px;color:var(--cyan-accent);font-family:'Orbitron',sans-serif;font-size:0.85rem;outline:none;" onchange="localStorage.setItem('fizzbuzz_group',this.value)">
+                            <option value="">Select Group</option>
+                            <option value="Group 1">Group 1</option>
+                            <option value="Group 2">Group 2</option>
+                            <option value="Group 3">Group 3</option>
+                            <option value="Group 4">Group 4</option>
+                            <option value="Group 5">Group 5</option>
+                            <option value="Group 6">Group 6</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Problem statement (ALL participants see this) -->
+            <div class="panel">
+                <div class="panel-title">&#128736; Problem Statement</div>
+                <div class="problem-text">
+Write a program that prints numbers from <strong>1 to N</strong>.<br>
+<em style="color:#9db5d3;font-size:0.85rem;">N will be provided by your coordinator.</em>
+                </div>
+            </div>
+
+            <!-- Rules (ALL participants see this) -->
+            <div class="panel">
+                <div class="panel-title" style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:1.1rem;">&#128203;</span>
+                    RULES
+                </div>
+                <p style="font-size:0.7rem;letter-spacing:1.5px;text-transform:uppercase;color:#9db5d3;margin-bottom:16px;">PLEASE READ THE FOLLOWING INSTRUCTIONS CAREFULLY.</p>
+                <div class="problem-text" style="background:transparent;border:none;padding:0;">
+                    <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;">
+                        <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--cyan-accent);font-size:0.55rem;margin-top:6px;">&#11044;</span><span>Print each number on a new line.</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--cyan-accent);font-size:0.55rem;margin-top:6px;">&#11044;</span><span>Your coordinator will give you the exact conditions during the round.</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--cyan-accent);font-size:0.55rem;margin-top:6px;">&#11044;</span><span>One code submission per shuffled group.</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--cyan-accent);font-size:0.55rem;margin-top:6px;">&#11044;</span><span>Any group member may submit on behalf of the group.</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:var(--cyan-accent);font-size:0.55rem;margin-top:6px;">&#11044;</span><span>Use any programming language.</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Secret Mission (Imposter ONLY — injected by JS) -->
+            <div id="classified-section" style="display:none;">
+                <div class="secret-panel">
+                    <div class="secret-header" onclick="toggleClassified()">
+                        <div class="secret-header-left">
+                            <span class="secret-icon">&#128561;</span>
+                            <div>
+                                <div class="secret-title">SECRET MISSION &mdash; IMPOSTER ONLY</div>
+                                <div class="secret-subtitle" id="secret-subtitle">Tap to reveal your secret mission.</div>
+                            </div>
+                        </div>
+                        <span class="secret-chevron" id="classified-arrow">&#8963;</span>
+                    </div>
+                    <div class="secret-body" id="classified-body">
+                        <div class="secret-warning">
+                            <span class="secret-warning-icon">&#9888;</span>
+                            <span class="secret-warning-text">IMPORTANT: Keep this mission secret. Do not tell your teammates.</span>
+                        </div>
+                        <div class="secret-steps">
+                            <div class="secret-step">
+                                <span class="step-num">1</span>
+                                <span class="step-text">Print numbers from 1 to N.</span>
+                            </div>
+                            <div class="secret-step">
+                                <span class="step-num">2</span>
+                                <span class="step-text">Fizz &rarr; for numbers divisible by 3.</span>
+                            </div>
+                            <div class="secret-step">
+                                <span class="step-num">3</span>
+                                <span class="step-text">Buzz &rarr; for numbers divisible by 5.</span>
+                            </div>
+                            <div class="secret-step">
+                                <span class="step-num">4</span>
+                                <span class="step-text">
+                                    FizzBuzz &rarr; for numbers divisible by both 3 and 5.
+                                    <span class="step-note">(Do not reveal this condition to your group members.)<br>Your fellow specialists should not make the code output &ldquo;FizzBuzz&rdquo;.</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start button -->
+            <button class="start-btn" onclick="enterCoding()">START FIZZBUZZ ROUND &#8594;</button>
+        </div>
+
+        <!-- Already expired -->
+        <div id="state-expired" class="waiting-box" style="display:none;">
+            <div class="wt" style="color:var(--crimson-red);">&#9201; FizzBuzz Round Ended</div>
+            <div class="ws">The round has closed. Contact your coordinator.</div>
+        </div>
     </div>
 
-    <!-- JavaScript Engine -->
     <script>
-        // 1. Space Canvas Background
-        const canvas = document.getElementById('space-bg');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        var PARTICIPANT_ID   = localStorage.getItem('participant_id') || sessionStorage.getItem('participant_id');
+        if (!PARTICIPANT_ID) {
+            var _s = sessionStorage.getItem('imposterParticipant');
+            var _p = _s ? JSON.parse(_s) : null;
+            PARTICIPANT_ID = _p && _p.id ? String(_p.id) : null;
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        if (!PARTICIPANT_ID) { window.location.href = 'homepage.html'; }
 
-        const stars = [];
-        const colors = ['#ffffff', '#ff1e43', '#00f0ff', '#6b21a8'];
+        var PARTICIPANT_NAME = localStorage.getItem('participant_name') || '';
+        var ORIGINAL_TEAM    = localStorage.getItem('imposterTeamName') || '';
+        var pollInterval     = null;
 
-        for (let i = 0; i < 150; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.8,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                speed: Math.random() * 0.5 + 0.1
+        // Space bg
+        var cv=document.getElementById('space-bg'),cx=cv.getContext('2d');
+        function rC(){cv.width=window.innerWidth;cv.height=window.innerHeight;}rC();window.addEventListener('resize',rC);
+        var st=[];for(var i=0;i<150;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.8,c:['#fff','#ff1e43','#00f0ff','#6b21a8'][Math.floor(Math.random()*4)],s:Math.random()*0.5+0.1});
+        (function a(){cx.clearRect(0,0,cv.width,cv.height);st.forEach(function(s){cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=s.c;cx.fill();s.y+=s.s;if(s.y>cv.height){s.y=0;s.x=Math.random()*cv.width;}});requestAnimationFrame(a);})();
+
+        function showState(s){
+            ['loading','waiting','open','expired'].forEach(function(n){
+                var el=document.getElementById('state-'+n);
+                if(el) el.style.display=(n===s)?'block':'none';
             });
         }
 
-        function animateSpace() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(star => {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = star.color;
-                ctx.fill();
+        function toggleClassified(){
+            var body  = document.getElementById('classified-body');
+            var arrow = document.getElementById('classified-arrow');
+            var sub   = document.getElementById('secret-subtitle');
+            body.classList.toggle('open');
+            var isOpen = body.classList.contains('open');
+            arrow.className = isOpen ? 'secret-chevron open' : 'secret-chevron';
+            if (sub) sub.innerText = isOpen ? 'This section is only for the imposter. Do not reveal this to your teammates.' : 'Tap to reveal your secret mission.';
+        }
 
-                star.y += star.speed;
-                if (star.y > canvas.height) {
-                    star.y = 0;
-                    star.x = Math.random() * canvas.width;
+        function enterCoding(){
+            // If dropdown is showing, ensure a group is selected
+            var sel = document.getElementById('info-group-select');
+            if (sel && sel.style.display !== 'none') {
+                var chosen = sel.value;
+                if (!chosen) { alert('Please select your Shuffled Group before continuing.'); return; }
+                localStorage.setItem('fizzbuzz_group', chosen);
+            }
+            window.location.href='fizzbuzz_coding.html';
+        }
+
+        async function loadStatus(){
+            try {
+                // Check toggle
+                var tr = await fetch('http://localhost:3000/api/fizzbuzz/toggle');
+                var td = await tr.json();
+                if (!td.success) { showState('waiting'); return; }
+
+                // Only show expired if actually finished AND time really ran out
+                if (td.status === 'finished' || (td.remaining_seconds !== undefined && td.remaining_seconds <= 0 && td.status !== 'running')) {
+                    showState('expired'); return;
                 }
-            });
-            requestAnimationFrame(animateSpace);
+                if (!td.fizzbuzz_open) { showState('waiting'); return; }
+
+                // Get participant info + role
+                var ar = await fetch('http://localhost:3000/api/fizzbuzz/status/'+PARTICIPANT_ID);
+                var ad = await ar.json();
+
+                // Fetch shuffled_group from main_event_assignments as authoritative source
+                var shuffledGroup = (ad.success && ad.shuffled_group) || '';
+                if (!shuffledGroup) {
+                    try {
+                        var mr = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
+                        var md = await mr.json();
+                        if (md.success && md.assignment && md.assignment.shuffled_group) {
+                            shuffledGroup = md.assignment.shuffled_group;
+                        }
+                    } catch(e2){}
+                }
+
+                showState('open');
+
+                document.getElementById('info-name').innerText  = PARTICIPANT_NAME || (ad.success ? ad.participant_name||'--' : '--');
+                document.getElementById('info-team').innerText  = ORIGINAL_TEAM || '--';
+
+                if (shuffledGroup) {
+                    // Show the group value directly
+                    document.getElementById('info-group').innerText = shuffledGroup;
+                    document.getElementById('info-group-select').style.display = 'none';
+                    // Persist for coding page
+                    localStorage.setItem('fizzbuzz_group', shuffledGroup);
+                } else {
+                    // Fallback: show dropdown so participant can self-select
+                    document.getElementById('info-group').style.display = 'none';
+                    document.getElementById('info-group-select').style.display = 'inline-block';
+                }
+
+                // Classified mission for Imposter only
+                // Use my-assignment as authoritative source for is_imposter
+                var isImposter = (ad.success && ad.is_imposter) ? true : false;
+                if (!isImposter) {
+                    try {
+                        var mr2 = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
+                        var md2 = await mr2.json();
+                        if (md2.success && md2.assignment && md2.assignment.is_imposter === true) {
+                            isImposter = true;
+                        }
+                    } catch(e3){}
+                }
+                if (isImposter) {
+                    document.getElementById('classified-section').style.display = 'block';
+                }
+            } catch(e) {
+                showState('waiting');
+            }
         }
-        animateSpace();
 
-        // 2. Stopwatch Timer (MM:SS)
-        let startTime = Date.now();
-        let timerInterval = null;
+        // Poll for status change while waiting
+        pollInterval = setInterval(async function(){
+            try {
+                var r = await fetch('http://localhost:3000/api/fizzbuzz/toggle');
+                var d = await r.json();
+                if (d.fizzbuzz_open || d.status === 'finished') {
+                    clearInterval(pollInterval);
+                    loadStatus();
+                }
+            } catch(e){}
+        }, 4000);
 
-        function updateTimer() {
-            const elapsedMs = Date.now() - startTime;
-            
-            const totalSeconds = Math.floor(elapsedMs / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-
-            const formattedMin = String(minutes).padStart(2, '0');
-            const formattedSec = String(seconds).padStart(2, '0');
-
-            document.getElementById('timer').textContent = `${formattedMin}:${formattedSec}`;
-        }
-
-        // Start timer ticking immediately
-        updateTimer();
-        timerInterval = setInterval(updateTimer, 1000);
-
-        // 3. Submission Handler
-        function submitTask(event) {
-            event.preventDefault(); // Stop page reloads
-
-            // Freeze timer on submission
-            clearInterval(timerInterval);
-
-            // Turn off glowing live signal
-            const dot = document.getElementById('live-dot');
-            dot.style.animation = 'none';
-            dot.style.backgroundColor = '#555';
-            dot.style.boxShadow = 'none';
-
-            const recordTime = document.getElementById('timer').textContent;
-            const participantName = document.getElementById('participant-id').value;
-
-            // Lock UI controls to prevent re-submitting
-            document.getElementById('code-input').disabled = true;
-            document.getElementById('participant-id').disabled = true;
-            
-            const submitBtn = document.getElementById('submit-btn');
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.5';
-            submitBtn.style.cursor = 'not-allowed';
-            submitBtn.textContent = 'SUBMITTED';
-
-            // Display completion message with exact MM:SS timestamp
-            const statusMsg = document.getElementById('status-msg');
-            statusMsg.style.display = 'block';
-            statusMsg.innerHTML = `✓ TASK SUBMITTED!<br>Participant: <strong>${participantName}</strong><br>Final Timestamp: <strong>${recordTime} (MM:SS)</strong>`;
-        }
+        loadStatus();
     </script>
 </body>
 </html>

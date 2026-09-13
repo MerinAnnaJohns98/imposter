@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIZZBUZZ CODING | Astra 11.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-black:#08070b; --dark-grey:#16151d; --cherry-red:#c00d2e; --crimson-red:#ff1e43; --violet:#6b21a8; --deep-blue:#0d1b2a; --cyan-accent:#00f0ff; --green-accent:#00ff66; --text-light:#f3f4f6; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Rajdhani',sans-serif; }
+        body { background-color:var(--bg-black); color:var(--text-light); min-height:100vh; overflow-x:hidden; }
+        #space-bg { position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:-1; background:radial-gradient(circle at center,#1a0b2e 0%,var(--bg-black) 80%); }
+        header { display:flex; justify-content:space-between; align-items:center; padding:15px 5%; background:rgba(8,7,11,0.85); backdrop-filter:blur(10px); border-bottom:2px solid var(--cherry-red); position:sticky; top:0; z-index:100; }
+        .org-branding { font-family:'Orbitron',sans-serif; font-size:0.9rem; color:#aaa; letter-spacing:1px; }
+        .org-branding span { color:var(--crimson-red); font-weight:bold; }
+        .container { max-width:860px; margin:30px auto; padding:20px; display:flex; flex-direction:column; gap:22px; }
+        /* Timer */
+        .timer-box { display:flex; align-items:center; justify-content:space-between; background:rgba(13,27,42,0.9); border:2px solid var(--cyan-accent); border-radius:8px; padding:15px 25px; box-shadow:0 0 12px rgba(0,240,255,0.3); }
+        .timer-label { font-family:'Orbitron',sans-serif; font-size:1rem; color:#aaa; letter-spacing:2px; display:flex; align-items:center; gap:10px; }
+        .live-dot { width:12px; height:12px; background-color:var(--green-accent); border-radius:50%; box-shadow:0 0 10px var(--green-accent); animation:pg 0.8s infinite alternate; }
+        @keyframes pg { from{opacity:0.3;transform:scale(0.9)} to{opacity:1;transform:scale(1.1)} }
+        .timer-display { font-family:'Orbitron',sans-serif; font-size:2.4rem; font-weight:900; color:var(--green-accent); text-shadow:0 0 12px rgba(0,255,102,0.7); letter-spacing:3px; }
+        .timer-display.expired { color:var(--crimson-red); text-shadow:0 0 12px rgba(255,30,67,0.7); }
+        /* Info card */
+        .info-card { background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; padding:20px 24px; position:relative; overflow:hidden; }
+        .info-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg,var(--cherry-red),var(--violet),var(--deep-blue)); }
+        .info-row { display:flex; gap:28px; flex-wrap:wrap; }
+        .info-item { display:flex; flex-direction:column; gap:3px; }
+        .info-label { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#9db5d3; }
+        .info-value { font-size:1rem; font-weight:bold; color:var(--cyan-accent); letter-spacing:1px; }
+        /* Form panel */
+        .panel { background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; padding:22px 24px; position:relative; overflow:hidden; }
+        .panel::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:linear-gradient(90deg,var(--cherry-red),var(--violet),var(--deep-blue)); }
+        .panel-title { font-family:'Orbitron',sans-serif; font-size:1rem; color:var(--cyan-accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+        .input-label { font-family:'Orbitron',sans-serif; font-size:0.85rem; color:var(--cyan-accent); letter-spacing:1px; display:block; margin-bottom:8px; }
+        .lang-select { width:100%; padding:12px 14px; background:rgba(8,7,11,0.95); border:2px solid var(--violet); border-radius:8px; color:var(--text-light); font-family:'Orbitron',sans-serif; font-size:0.9rem; outline:none; cursor:pointer; margin-bottom:18px; transition:border-color 0.2s; }
+        .lang-select:focus { border-color:var(--cyan-accent); }
+        .code-area { width:100%; height:340px; background:rgba(8,7,11,0.95); border:2px solid var(--violet); border-radius:8px; padding:16px; color:var(--green-accent); font-family:'Fira Code',monospace; font-size:0.95rem; line-height:1.6; resize:vertical; outline:none; transition:border-color 0.2s,box-shadow 0.2s; }
+        .code-area:focus { border-color:var(--cyan-accent); box-shadow:0 0 12px rgba(0,240,255,0.3); }
+        .code-area:disabled { opacity:0.45; cursor:not-allowed; }
+        .submit-btn { width:100%; margin-top:16px; padding:16px; background:linear-gradient(135deg,#c00d2e,var(--crimson-red)); color:#fff; font-family:'Orbitron',sans-serif; font-size:1.05rem; font-weight:800; border:2px solid #000; border-radius:50px; cursor:pointer; letter-spacing:2px; box-shadow:0 0 15px rgba(255,30,67,0.5); transition:all 0.2s; }
+        .submit-btn:hover:not(:disabled) { transform:scale(1.02); box-shadow:0 0 28px rgba(255,30,67,0.8); }
+        .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        /* Status */
+        .status-msg { display:none; margin-top:18px; padding:18px; background:rgba(0,255,102,0.1); border:2px solid var(--green-accent); border-radius:8px; color:var(--green-accent); font-family:'Orbitron',sans-serif; text-align:center; font-size:1rem; line-height:1.6; }
+        .status-msg.error { background:rgba(255,30,67,0.1); border-color:var(--crimson-red); color:#ffbfd0; }
+        .locked-msg { padding:18px; background:rgba(0,240,255,0.06); border:1px solid rgba(0,240,255,0.3); border-radius:8px; color:var(--cyan-accent); font-family:'Orbitron',sans-serif; text-align:center; font-size:0.9rem; letter-spacing:1px; }
+        .waiting-box { padding:22px; background:rgba(22,21,29,0.85); border:2px solid var(--violet); border-radius:12px; text-align:center; }
+        .waiting-box .wt { font-family:'Orbitron',sans-serif; font-size:1.1rem; color:var(--cyan-accent); letter-spacing:2px; }
+        .waiting-box .ws { font-size:0.9rem; color:#9db5d3; margin-top:8px; }
+    </style>
+</head>
+<body>
+    <canvas id="space-bg"></canvas>
+    <header>
+        <div class="org-branding">ST. JOSEPH'S COLLEGE OF ENG. &amp; TECH. | <span>ASTRA 11.0</span></div>
+        <div class="org-branding">FIZZBUZZ SUBMISSION</div>
+    </header>
+
+    <div class="container">
+        <!-- Timer (always visible) -->
+        <div class="timer-box">
+            <span class="timer-label"><span class="live-dot" id="live-dot"></span>&nbsp;FIZZBUZZ TIMER:</span>
+            <span class="timer-display" id="timer-display">--:--</span>
+        </div>
+
+        <!-- Expired state -->
+        <div id="state-expired" class="waiting-box" style="display:none;">
+            <div class="wt" style="color:var(--crimson-red);">&#9201; FizzBuzz Round Ended</div>
+            <div class="ws">Time is up. Submissions are now closed.</div>
+        </div>
+
+        <!-- Participant info -->
+        <div class="info-card" id="info-card" style="display:none;">
+            <div class="info-row">
+                <div class="info-item"><span class="info-label">Participant</span><span class="info-value" id="info-name">--</span></div>
+                <div class="info-item"><span class="info-label">Original Team</span><span class="info-value" id="info-team">--</span></div>
+                <div class="info-item"><span class="info-label">Shuffled Group</span><span class="info-value" id="info-group">--</span></div>
+            </div>
+        </div>
+
+        <!-- Submission form -->
+        <div class="panel" id="form-panel" style="display:none;">
+            <!-- Already submitted notice -->
+            <div id="locked-notice" class="locked-msg" style="display:none; margin-bottom:16px;">
+                &#128274; Your group has already submitted. Waiting for results.
+            </div>
+
+            <form id="fizzbuzz-form" onsubmit="submitCode(event)">
+                <label class="input-label">PROGRAMMING LANGUAGE</label>
+                <select id="lang-select" class="lang-select">
+                    <option value="C">C</option>
+                    <option value="C++">C++</option>
+                    <option value="Java">Java</option>
+                    <option value="Python" selected>Python</option>
+                    <option value="JavaScript">JavaScript</option>
+                </select>
+
+                <label class="input-label" for="code-area">YOUR FIZZBUZZ SOLUTION</label>
+                <textarea id="code-area" class="code-area" placeholder="Paste your FizzBuzz solution here..." required></textarea>
+
+                <button type="submit" id="submit-btn" class="submit-btn">SUBMIT SOLUTION</button>
+            </form>
+
+            <div id="status-msg" class="status-msg"></div>
+        </div>
+    </div>
+
+    <script>
+        var PARTICIPANT_ID   = localStorage.getItem('participant_id') || sessionStorage.getItem('participant_id');
+        if (!PARTICIPANT_ID) {
+            var _s = sessionStorage.getItem('imposterParticipant');
+            var _p = _s ? JSON.parse(_s) : null;
+            PARTICIPANT_ID = _p && _p.id ? String(_p.id) : null;
+        }
+        if (!PARTICIPANT_ID) { window.location.href = 'homepage.html'; }
+
+        var PARTICIPANT_NAME = localStorage.getItem('participant_name') || '';
+        var ORIGINAL_TEAM    = localStorage.getItem('imposterTeamName') || '';
+        var timerInterval    = null;
+        var remainingSecs    = 0;
+        var timerStatus      = 'idle';
+
+        // Space bg
+        var cv=document.getElementById('space-bg'),cx=cv.getContext('2d');
+        function rC(){cv.width=window.innerWidth;cv.height=window.innerHeight;}rC();window.addEventListener('resize',rC);
+        var st=[];for(var i=0;i<150;i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.8,c:['#fff','#ff1e43','#00f0ff','#6b21a8'][Math.floor(Math.random()*4)],s:Math.random()*0.5+0.1});
+        (function a(){cx.clearRect(0,0,cv.width,cx.height||cv.height);st.forEach(function(s){cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=s.c;cx.fill();s.y+=s.s;if(s.y>cv.height){s.y=0;s.x=Math.random()*cv.width;}});requestAnimationFrame(a);})();
+
+        function fmtTime(s){ s=Math.max(0,s); var m=Math.floor(s/60),sec=s%60; return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
+
+        var _tickCount = 0;
+        function startCountdown(){
+            clearInterval(timerInterval);
+            _tickCount = 0;
+            timerInterval = setInterval(function(){
+                _tickCount++;
+                remainingSecs = Math.max(0, remainingSecs-1);
+                document.getElementById('timer-display').innerText = fmtTime(remainingSecs);
+                if (remainingSecs <= 0){
+                    clearInterval(timerInterval);
+                    document.getElementById('timer-display').className = 'timer-display expired';
+                    document.getElementById('state-expired').style.display = 'block';
+                    document.getElementById('submit-btn').disabled = true;
+                    document.getElementById('code-area').disabled = true;
+                    var dot = document.getElementById('live-dot');
+                    dot.style.animation='none'; dot.style.backgroundColor='#c00d2e'; dot.style.boxShadow='none';
+                    // Persist finished to DB
+                    fetch('http://localhost:3000/api/event/finish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventKey:'fizzbuzz'})}).catch(function(){});
+        } else if (_tickCount % 10 === 0) {
+                    // Persist remaining_seconds directly — no pause/resume (avoids race conditions)
+                    fetch('http://localhost:3000/api/event/tick',{
+                        method:'POST',
+                        headers:{'Content-Type':'application/json'},
+                        body:JSON.stringify({eventKey:'fizzbuzz', remaining_seconds: remainingSecs})
+                    }).catch(function(){});
+                }
+            }, 1000);
+        }
+
+        function disableForm(){
+            document.getElementById('submit-btn').disabled = true;
+            document.getElementById('code-area').disabled = true;
+        }
+
+        async function loadPage(){
+            try {
+                // 1. Check timer — fetch FIRST before checking remainingSecs
+                var loaded = false;
+                var tr = await fetch('http://localhost:3000/api/event-timers');
+                var td = await tr.json();
+                if (td.success && td.timers){
+                    var fb = td.timers.find(function(t){ return t.event_key==='fizzbuzz'; });
+                    if (fb){
+                        timerStatus   = fb.status;
+                        remainingSecs = Math.max(0, fb.remaining_seconds || 0);
+                        document.getElementById('timer-display').innerText = fmtTime(remainingSecs);
+                        loaded = true;
+                    }
+                }
+
+                // Only show expired AFTER we've loaded timer data, and status is truly finished
+                if (loaded && (timerStatus === 'finished' || (remainingSecs <= 0 && timerStatus !== 'running' && timerStatus !== 'paused'))){
+                    document.getElementById('timer-display').className = 'timer-display expired';
+                    document.getElementById('state-expired').style.display = 'block';
+                    document.getElementById('form-panel').style.display = 'none';
+                    return;
+                }
+
+                if (timerStatus === 'running') startCountdown();
+
+                // 2. Get participant info
+                var ar = await fetch('http://localhost:3000/api/fizzbuzz/status/'+PARTICIPANT_ID);
+                var ad = await ar.json();
+
+                document.getElementById('info-card').style.display = 'block';
+                document.getElementById('form-panel').style.display = 'block';
+                document.getElementById('info-name').innerText  = PARTICIPANT_NAME || (ad.success?ad.participant_name:'--');
+                document.getElementById('info-team').innerText  = ORIGINAL_TEAM || '--';
+
+                // Resolve group: API → localStorage → dropdown fallback
+                var groupFromAPI  = (ad.success && ad.shuffled_group) || '';
+                var groupFromStore = localStorage.getItem('fizzbuzz_group') || '';
+                var resolvedGroup  = groupFromAPI || groupFromStore;
+
+                if (!resolvedGroup) {
+                    // Try my-assignment as last resort
+                    try {
+                        var mr2 = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
+                        var md2 = await mr2.json();
+                        if (md2.success && md2.assignment && md2.assignment.shuffled_group) {
+                            resolvedGroup = md2.assignment.shuffled_group;
+                        }
+                    } catch(e3){}
+                }
+
+                var groupEl  = document.getElementById('info-group');
+                var groupSel = document.getElementById('info-group-select');
+                if (resolvedGroup) {
+                    groupEl.innerText = resolvedGroup;
+                    if (groupSel) groupSel.style.display = 'none';
+                    localStorage.setItem('fizzbuzz_group', resolvedGroup);
+                } else {
+                    groupEl.style.display = 'none';
+                    if (groupSel) groupSel.style.display = 'inline-block';
+                }
+
+                // Already locked — group submitted
+                if (ad.success && (ad.group_submitted || ad.fizzbuzz_locked)){
+                    document.getElementById('locked-notice').innerText = '\uD83D\uDD12 Submitted Successfully — Evaluation in Progress';
+                    document.getElementById('locked-notice').style.display = 'block';
+                    document.getElementById('fizzbuzz-form').style.display = 'none';
+                }
+            } catch(e){
+                document.getElementById('timer-display').innerText = '--:--';
+            }
+        }
+
+        // Poll for group lock (so other members see submitted state)
+        var lockPollInterval = null;
+        function startLockPoll(shuffledGroup) {
+            clearInterval(lockPollInterval);
+            lockPollInterval = setInterval(async function(){
+                try {
+                    var r = await fetch('http://localhost:3000/api/fizzbuzz/status/'+PARTICIPANT_ID);
+                    var d = await r.json();
+                    if (d.success && (d.group_submitted || d.fizzbuzz_locked)) {
+                        clearInterval(lockPollInterval);
+                        document.getElementById('locked-notice').innerText = '\uD83D\uDD12 Submitted Successfully — Evaluation in Progress';
+                        document.getElementById('locked-notice').style.display = 'block';
+                        document.getElementById('fizzbuzz-form').style.display = 'none';
+                    }
+                } catch(e){}
+            }, 4000);
+        }
+
+        async function submitCode(e){
+            e.preventDefault();
+            var code = document.getElementById('code-area').value.trim();
+            var lang = document.getElementById('lang-select').value;
+            var btn  = document.getElementById('submit-btn');
+            var msg  = document.getElementById('status-msg');
+            if (!code){ alert('Please paste your FizzBuzz solution.'); return; }
+
+            btn.disabled = true; btn.textContent = 'SUBMITTING...';
+            msg.style.display = 'none';
+            try {
+                var res = await fetch('http://localhost:3000/api/fizzbuzz/submit-v2', {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({
+                        participant_id: PARTICIPANT_ID,
+                        fizz_output:    code,
+                        language:       lang,
+                        repo_url:       ''
+                    })
+                });
+                var data = await res.json();
+
+                if (res.status === 409){
+                    document.getElementById('locked-notice').innerText = '\uD83D\uDD12 Submitted Successfully — Evaluation in Progress';
+                    document.getElementById('locked-notice').style.display = 'block';
+                    document.getElementById('fizzbuzz-form').style.display = 'none';
+                    return;
+                }
+                if (res.ok && data.success){
+                    clearInterval(timerInterval);
+                    disableForm();
+                    btn.textContent = 'SUBMITTED';
+                    msg.style.display = 'block';
+                    msg.className = 'status-msg';
+                    msg.innerHTML = '&#10003; SOLUTION SUBMITTED SUCCESSFULLY!<br>'+
+                        '<strong>Group:</strong> '+(data.shuffled_group||'--')+'<br>'+
+                        '<strong>Submitted by:</strong> '+(data.submitted_by||'--')+'<br>'+
+                        '<strong>Language:</strong> '+lang+'<br><br>'+
+                        'Submitted Successfully — Evaluation in Progress';
+                    return;
+                }
+                msg.style.display = 'block';
+                msg.className = 'status-msg error';
+                msg.innerText = (data&&data.message)||'Submission failed.';
+                btn.disabled = false; btn.textContent = 'SUBMIT SOLUTION';
+            } catch(err){
+                msg.style.display = 'block';
+                msg.className = 'status-msg error';
+                msg.innerText = 'Unable to reach server.';
+                btn.disabled = false; btn.textContent = 'SUBMIT SOLUTION';
+            }
+        }
+
+        loadPage();
+        // Start lock-polling after load to detect when another group member submits
+        setTimeout(function(){ startLockPoll(); }, 3000);
+    </script>
+</body>
+</html>

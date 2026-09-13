@@ -1,704 +1,915 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MASTER ADMIN CONTROL | ASTRA 11.0</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkblack: '#06050a',
-                        charcoal: '#121018',
-                        cardgray: '#1a1724',
-                        bordergray: '#2d263d',
-                        crimson: {
-                            500: '#ff1e43',
-                            600: '#c00d2e',
-                            700: '#9e0b24',
-                        }
-                    },
-                    fontFamily: {
-                        orbitron: ['Orbitron', 'sans-serif'],
-                        rajdhani: ['Rajdhani', 'sans-serif']
-                    }
-                }
-            }
-        }
+        tailwind.config={theme:{extend:{colors:{darkblack:'#06050a',charcoal:'#121018',cardgray:'#1a1724',bordergray:'#2d263d',crimson:{500:'#ff1e43',600:'#c00d2e',700:'#9e0b24'}},fontFamily:{orbitron:['Orbitron','sans-serif'],rajdhani:['Rajdhani','sans-serif']}}}}
     </script>
 </head>
 <body class="bg-darkblack text-gray-100 font-rajdhani flex h-screen overflow-hidden">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-72 bg-charcoal border-r border-bordergray flex flex-col z-20">
-        <div class="p-6 border-b border-bordergray">
-            <h1 class="text-lg font-orbitron font-bold tracking-wider text-crimson-500">ASTRA 11.0</h1>
-            <p class="text-xs text-gray-400 mt-1 font-orbitron">Master Admin Control</p>
+<!-- ── Sidebar ── -->
+<aside class="w-72 bg-charcoal border-r border-bordergray flex flex-col z-20 flex-shrink-0">
+    <div class="p-6 border-b border-bordergray">
+        <h1 class="text-lg font-orbitron font-bold tracking-wider text-crimson-500">ASTRA 11.0</h1>
+        <p class="text-xs text-gray-400 mt-1 font-orbitron">Master Admin Control</p>
+    </div>
+    <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto font-orbitron text-xs">
+        <button onclick="switchTab('overview')"     id="nav-overview"     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-crimson-600 text-white shadow-lg shadow-crimson-600/30 transition-all">📊 Overview</button>
+        <button onclick="switchTab('participants')" id="nav-participants" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">👥 Participants</button>
+        <button onclick="switchTab('timers')"       id="nav-timers"       class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">⏱️ Event Timers</button>
+        <button onclick="switchTab('fizzbuzz')"     id="nav-fizzbuzz"     class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">📊 FizzBuzz</button>
+        <button onclick="switchTab('manual')"       id="nav-manual"       class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">✏️ Manual Scoring</button>
+        <button onclick="switchTab('podium')"       id="nav-podium"       class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">🏆 Team Podium</button>
+        <button onclick="switchTab('flow')"         id="nav-flow"         class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all">👁️ Event Flow</button>
+    </nav>
+    <div class="p-4 border-t border-bordergray bg-black/50 text-xs font-orbitron">
+        <div class="flex items-center justify-between text-gray-400 mb-1">
+            <span>Live Status</span><span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
-        
-        <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto font-orbitron text-xs">
-            <button onclick="switchTab('overview')" id="nav-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all bg-crimson-600 text-white shadow-lg shadow-crimson-600/30">
-                📊 Overview
-            </button>
-            <button onclick="switchTab('submissions')" id="nav-submissions" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200">
-                👥 Participants
-            </button>
-            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200">
-                🏆 Original Team Podium
-            </button>
-            <button onclick="switchTab('visibility')" id="nav-visibility" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200">
-                👁️ Event Flow & Gating Toggle
-            </button>
-        </nav>
+        <div id="sidebar-status" class="text-crimson-500 font-bold truncate">Loading...</div>
+    </div>
+</aside>
 
-        <div class="p-4 border-t border-bordergray bg-black/50 text-xs font-orbitron">
-            <div class="flex items-center justify-between text-gray-400 mb-1">
-                <span>Modules Status</span>
-                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<!-- ── Main ── -->
+<main class="flex-1 flex flex-col overflow-y-auto min-w-0">
+    <header class="h-16 border-b border-bordergray bg-charcoal/90 backdrop-blur px-6 flex items-center justify-between sticky top-0 z-10 flex-shrink-0">
+        <h2 id="header-title" class="text-lg font-orbitron font-bold tracking-wide text-gray-200 uppercase">Overview</h2>
+        <div class="flex items-center gap-3">
+            <button onclick="refreshAll()" class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-600/30 hover:bg-cyan-600 hover:text-white transition-all">↻ Refresh</button>
+            <!-- Stopwatch -->
+            <div class="flex items-center gap-2 bg-black/60 border border-bordergray px-4 py-1.5 rounded-xl">
+                <span class="text-sm font-mono font-bold text-cyan-400" id="sw-display">00:00:00</span>
+                <button onclick="startSW()" class="text-[10px] font-orbitron px-2 py-1 bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded border border-emerald-500/30 transition-all">▶</button>
+                <button onclick="stopSW()"  class="text-[10px] font-orbitron px-2 py-1 bg-amber-600/20  text-amber-400  hover:bg-amber-600  hover:text-white rounded border border-amber-500/30  transition-all">⏹</button>
+                <button onclick="resetSW()" class="text-[10px] font-orbitron px-2 py-1 bg-rose-600/20   text-rose-400   hover:bg-rose-600   hover:text-white rounded border border-rose-500/30   transition-all">↺</button>
             </div>
-            <div id="sidebar-active-event" class="text-crimson-500 font-bold truncate">Imposter Project (Open)</div>
         </div>
-    </aside>
+    </header>
 
-    <!-- Main Workspace -->
-    <main class="flex-1 flex flex-col overflow-y-auto">
-        
-        <!-- Header -->
-        <header class="h-20 border-b border-bordergray bg-charcoal/90 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-10">
-            <h2 id="header-title" class="text-xl font-orbitron font-bold tracking-wide text-gray-200 uppercase">Overview</h2>
-            <div class="text-xs font-orbitron text-gray-400">Master Admin Workspace</div>
-        </header>
+    <div class="p-6 max-w-7xl mx-auto w-full space-y-6">
 
-        <!-- Dynamic Content Area -->
-        <div class="p-8 max-w-7xl mx-auto w-full space-y-6">
-
-            <!-- SINGLE GLOBAL STOPWATCH WIDGET -->
-            <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="h-10 w-10 rounded-xl bg-crimson-600/20 border border-crimson-600/40 flex items-center justify-center text-crimson-500 font-orbitron font-bold">⏱️</div>
+        <!-- ══ TAB: OVERVIEW ══ -->
+        <div id="tab-overview" class="tab-content grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            <div class="lg:col-span-2 space-y-5">
+                <!-- Stat counters -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-cyan-400"    id="cnt-registered">--</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Registered</div></div>
+                    <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-amber-400"   id="cnt-submitted">--</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Submitted</div></div>
+                    <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-emerald-400" id="cnt-evaluated">--</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Evaluated</div></div>
+                    <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-rose-400"    id="cnt-pending">--</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Pending</div></div>
+                </div>
+                <!-- Recent submissions -->
+                <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl">
+                    <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2"><span class="text-crimson-500">#</span>Recent Submissions</h3>
+                    <div id="ov-recent" class="space-y-2 text-xs font-rajdhani">Loading...</div>
+                </div>
+                <!-- Task distribution by group -->
+                <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl">
+                    <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2"><span class="text-crimson-500">#</span>Main Event Task Assignments</h3>
+                    <div id="ov-tasks" class="space-y-3">Loading...</div>
+                </div>
+            </div>
+            <!-- Right panel -->
+            <div class="space-y-4 sticky top-20">
+                <div class="bg-cardgray border border-bordergray rounded-2xl p-4 shadow-2xl space-y-3 font-orbitron">
+                    <div class="border-b border-bordergray pb-2 flex items-center justify-between">
+                        <h3 class="text-xs font-bold text-crimson-500 uppercase tracking-widest">Conditions Preview</h3>
+                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    </div>
                     <div>
-                        <h3 class="text-sm font-orbitron font-bold text-white uppercase tracking-wider">Stopwatch</h3>
+                        <button onclick="toggleAcc('a1')" class="w-full flex items-center justify-between py-1.5 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
+                            <span>Imposter Project Status</span><span id="a1-icon" class="text-crimson-500">▲</span>
+                        </button>
+                        <div id="a1-body" class="text-xs font-rajdhani text-cyan-400 bg-black/40 p-2 rounded-lg border border-bordergray space-y-1">
+                            <div id="prev-status">Loading...</div>
+                        </div>
                     </div>
-                </div>
-                <div class="flex items-center gap-6 bg-black/60 border border-bordergray px-6 py-3 rounded-xl">
-                    <div class="text-2xl font-mono font-bold text-cyan-400 tracking-widest" id="stopwatch-display">00:00:00</div>
-                    <div class="flex items-center gap-2 font-orbitron text-xs">
-                        <button onclick="startStopwatch()" class="px-3 py-1.5 bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white rounded-lg border border-emerald-500/30 transition-all">Start</button>
-                        <button onclick="stopStopwatch()" class="px-3 py-1.5 bg-amber-600/20 text-amber-400 hover:bg-amber-600 hover:text-white rounded-lg border border-amber-500/30 transition-all">Stop</button>
-                        <button onclick="resetStopwatch()" class="px-3 py-1.5 bg-rose-600/20 text-rose-400 hover:bg-rose-600 hover:text-white rounded-lg border border-rose-500/30 transition-all">Reset</button>
-                        <button onclick="restartStopwatch()" class="px-3 py-1.5 bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600 hover:text-white rounded-lg border border-cyan-500/30 transition-all">Restart</button>
+                    <div>
+                        <button onclick="toggleAcc('a2')" class="w-full flex items-center justify-between py-1.5 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
+                            <span>Team Score Preview</span><span id="a2-icon" class="text-crimson-500">▼</span>
+                        </button>
+                        <div id="a2-body" class="hidden text-xs font-mono bg-black/40 p-2 rounded-lg border border-bordergray space-y-1">
+                            <div id="prev-scores">Loading...</div>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- TAB 1: OVERVIEW -->
-            <div id="tab-overview" class="tab-content grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                
-                <!-- Left 2 Columns: Sorted Event Headings & Team Hierarchies -->
-                <div class="lg:col-span-2 space-y-8" id="overview-events-container">
-                    <!-- Injected dynamically via JS -->
-                </div>
-
-                <!-- Right Column: Accordion Style Side Preview Panel -->
-                <div class="space-y-4 sticky top-28">
-                    <div class="bg-cardgray border border-bordergray rounded-2xl p-4 shadow-2xl space-y-3 font-orbitron">
-                        <div class="border-b border-bordergray pb-2 flex items-center justify-between">
-                            <h3 class="text-xs font-bold text-crimson-500 uppercase tracking-widest">Conditions Preview</h3>
-                            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        </div>
-
-                        <!-- Accordion Item 1: Active Event Gating Status -->
-                        <div class="border-b border-bordergray pb-2">
-                            <button onclick="toggleAccordion('acc-1')" class="w-full flex items-center justify-between py-2 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
-                                <span>Event Gating Status</span>
-                                <span id="icon-acc-1" class="text-crimson-500 font-bold">▲</span>
-                            </button>
-                            <div id="content-acc-1" class="pt-1 pb-2 text-xs font-rajdhani text-cyan-400 bg-black/40 p-2.5 rounded-lg border border-bordergray space-y-1">
-                                <div id="preview-active-gating">Loading gating...</div>
-                            </div>
-                        </div>
-
-                        <!-- Accordion Item 2: Team Prize Standings -->
-                        <div class="border-b border-bordergray pb-2">
-                            <button onclick="toggleAccordion('acc-2')" class="w-full flex items-center justify-between py-2 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
-                                <span>Team Prize Standings</span>
-                                <span id="icon-acc-2" class="text-crimson-500 font-bold">▼</span>
-                            </button>
-                            <div id="content-acc-2" class="hidden pt-1 pb-2 text-xs font-mono bg-black/40 p-2.5 rounded-lg border border-bordergray space-y-1.5">
-                                <div id="preview-team-standings">Loading standings...</div>
-                            </div>
-                        </div>
-
-                        <!-- Accordion Item 3: Shuffling & Grading Rule -->
-                        <div class="border-b border-bordergray pb-2">
-                            <button onclick="toggleAccordion('acc-3')" class="w-full flex items-center justify-between py-2 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
-                                <span>Grading Rules per Module</span>
-                                <span id="icon-acc-3" class="text-crimson-500 font-bold">▼</span>
-                            </button>
-                            <div id="content-acc-3" class="hidden pt-1 pb-2 text-xs font-rajdhani text-gray-300 bg-black/40 p-2.5 rounded-lg border border-bordergray space-y-1.5">
-                                <div>• <strong>Imposter & FizzBuzz:</strong> AI-Only Marks</div>
-                                <div>• <strong>Code, Sherlock & Drawing:</strong> Manual Jury-Only Marks</div>
-                            </div>
+                    <div>
+                        <button onclick="toggleAcc('a3')" class="w-full flex items-center justify-between py-1.5 text-xs text-gray-200 hover:text-crimson-500 transition-colors">
+                            <span>Grading Rules</span><span id="a3-icon" class="text-crimson-500">▼</span>
+                        </button>
+                        <div id="a3-body" class="hidden text-xs font-rajdhani text-gray-300 bg-black/40 p-2 rounded-lg border border-bordergray space-y-1">
+                            <div>• Main Event (AI): up to 100 pts each</div>
+                            <div>• FizzBuzz (AI): up to 100 pts each</div>
+                            <div>• Code Imposter: manual team marks</div>
+                            <div>• Sherlock Holmes: manual team marks</div>
+                            <div>• Drawing: manual team marks</div>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <!-- TAB 2: PARTICIPANTS -->
-            <div id="tab-submissions" class="tab-content hidden space-y-8">
-                <!-- Event Headings Container -->
-                <div id="grading-events-container" class="space-y-8">
-                    <!-- Injected dynamically via JS -->
-                </div>
-            </div>
-
-            <!-- TAB 3: ORIGINAL TEAM PODIUM -->
-            <div id="tab-leaderboard" class="tab-content hidden space-y-6">
-                <div id="podium-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                    <!-- Injected via JS -->
-                </div>
-            </div>
-
-            <!-- TAB 4: EVENT FLOW & GATING TOGGLE -->
-            <div id="tab-visibility" class="tab-content hidden space-y-6">
-                <div class="bg-cardgray border border-bordergray rounded-2xl p-8 max-w-2xl shadow-xl space-y-6 mx-auto">
-                    <div class="space-y-4" id="event-gating-list">
-                        <!-- Injected via JS -->
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </main>
 
-    <!-- MANUAL ADD/EDIT PARTICIPANT RECORD MODAL -->
-    <div id="manual-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardgray border border-bordergray rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 class="text-lg font-orbitron font-bold text-white" id="modal-title-text">Add / Edit Shuffled Participant</h3>
-            <div class="space-y-3 font-rajdhani text-sm">
-                <div>
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Participant Name</label>
-                    <input type="text" id="manual-participant-name" placeholder="e.g. Arpitha Bose" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Pre-Shuffled Team</label>
-                    <select id="manual-original-team" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 font-orbitron text-xs">
-                        <option value="Team 1">Team 1</option>
-                        <option value="Team 2">Team 2</option>
-                        <option value="Team 3">Team 3</option>
-                        <option value="Team 4">Team 4</option>
-                        <option value="Team 5">Team 5</option>
-                        <option value="Team 6">Team 6</option>
+        <!-- ══ TAB: PARTICIPANTS ══ -->
+        <div id="tab-participants" class="tab-content hidden">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider">All 24 Participants</h3>
+                <div class="flex gap-2 flex-wrap">
+                    <select id="f-status" onchange="renderParticipants()" class="text-xs font-orbitron bg-cardgray border border-bordergray rounded-lg px-3 py-1.5 text-gray-300 focus:outline-none focus:border-crimson-500">
+                        <option value="all">All Status</option><option value="Pending">Pending</option><option value="Submitted">Submitted</option><option value="Evaluated">Evaluated</option>
+                    </select>
+                    <select id="f-team" onchange="renderParticipants()" class="text-xs font-orbitron bg-cardgray border border-bordergray rounded-lg px-3 py-1.5 text-gray-300 focus:outline-none focus:border-crimson-500">
+                        <option value="all">All Teams</option>
+                    </select>
+                    <select id="f-group" onchange="renderParticipants()" class="text-xs font-orbitron bg-cardgray border border-bordergray rounded-lg px-3 py-1.5 text-gray-300 focus:outline-none focus:border-crimson-500">
+                        <option value="all">All Groups</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Event Module</label>
-                    <select id="manual-event" onchange="handleEventTypeChange()" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 font-orbitron text-xs">
-                        <option value="Imposter Project">Imposter Project (AI-Only)</option>
-                        <option value="FizzBuzz">FizzBuzz (AI-Only)</option>
-                        <option value="Code Imposter">Code Imposter (Manual-Only)</option>
-                        <option value="Sherlock Holmes">Sherlock Holmes (Manual-Only)</option>
-                        <option value="Drawing">Drawing (Manual-Only)</option>
-                    </select>
-                </div>
+            </div>
+            <div id="participants-list" class="space-y-2"></div>
+        </div>
 
-                <!-- Dynamic Grading Inputs -->
-                <div id="ai-score-container">
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">AI Score (0-100)</label>
-                    <input type="number" id="manual-ai" value="90" max="100" min="0" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 font-mono">
-                </div>
-                <div id="jury-score-container" class="hidden">
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Manual Jury Marks (0-100)</label>
-                    <input type="number" id="manual-jury" value="85" max="100" min="0" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 font-mono">
-                </div>
-
+        <!-- ══ TAB: EVENT TIMERS (Part 6) ══ -->
+        <div id="tab-timers" class="tab-content hidden space-y-5">
+            <!-- FizzBuzz ON/OFF toggle (prominent) -->
+            <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl flex items-center justify-between gap-4">
                 <div>
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Spot Timestamp (MM:SS)</label>
-                    <input type="text" id="manual-time" value="03:45" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 font-mono">
+                    <h3 class="text-sm font-orbitron font-bold text-white uppercase tracking-wider">FizzBuzz Round</h3>
+                    <p class="text-xs text-gray-400 mt-1 font-rajdhani">Turn ON to let participants enter FizzBuzz. Turn OFF to close the round.</p>
                 </div>
-                <div>
-                    <label class="block text-xs font-orbitron text-gray-400 mb-1">Submission Repository / Asset Link</label>
-                    <input type="url" id="manual-link" value="https://github.com/repo/project" class="w-full bg-black border border-bordergray rounded-xl px-3 py-2 text-white focus:outline-none focus:border-crimson-500 text-xs font-mono">
+                <div class="flex items-center gap-3">
+                    <span id="fb-toggle-status" class="text-xs font-orbitron text-rose-400">OFF</span>
+                    <button onclick="toggleFizzBuzz()" id="fb-toggle-btn"
+                        class="text-sm font-orbitron px-5 py-2 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-all">
+                        Turn ON
+                    </button>
                 </div>
             </div>
-            <div class="flex justify-end gap-3 pt-2">
-                <button onclick="closeManualModal()" class="px-4 py-2 rounded-xl text-xs font-orbitron bg-bordergray text-gray-300 hover:bg-zinc-800">Cancel</button>
-                <button onclick="saveManualRecord()" class="px-5 py-2 rounded-xl text-xs font-orbitron bg-crimson-600 text-white font-bold hover:bg-crimson-700 shadow-lg shadow-crimson-600/30">Save Record</button>
+            <div class="flex items-center justify-between">
+                <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider">All Event Timers</h3>
+                <button onclick="loadTimers()" class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-600/30 hover:bg-cyan-600 hover:text-white transition-all">↻ Refresh</button>
             </div>
+            <div id="timers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="text-gray-500 font-orbitron text-sm text-center py-8 col-span-2">Loading timers...</div>
+            </div>
+        </div>
+
+        <!-- ══ TAB: FIZZBUZZ MONITOR (Part 11) ══ -->
+        <div id="tab-fizzbuzz" class="tab-content hidden space-y-5">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-emerald-400" id="fb-cnt-submitted">0</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Groups Submitted</div></div>
+                <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-2xl font-orbitron font-bold text-rose-400"    id="fb-cnt-pending">6</div><div class="text-xs text-gray-400 mt-1 font-orbitron">Groups Pending</div></div>
+                <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-xl font-orbitron font-bold text-amber-400 truncate" id="fb-first">—</div><div class="text-xs text-gray-400 mt-1 font-orbitron">1st Submitted</div></div>
+                <div class="bg-cardgray border border-bordergray rounded-xl p-4 text-center"><div class="text-xl font-orbitron font-bold text-cyan-400 truncate" id="fb-second">—</div><div class="text-xs text-gray-400 mt-1 font-orbitron">2nd Submitted</div></div>
+            </div>
+            <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl">
+                <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider mb-3">Group Submissions</h3>
+                <div id="fizzbuzz-groups" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- ══ TAB: MANUAL SCORING ══ -->
+        <div id="tab-manual" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="manual-events-grid">
+                <!-- Injected per event -->
+            </div>
+        </div>
+
+        <!-- ══ TAB: TEAM PODIUM ══ -->
+        <div id="tab-podium" class="tab-content hidden space-y-5">
+            <div id="podium-top3" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+            <div id="podium-table" class="bg-cardgray border border-bordergray rounded-2xl p-6 shadow-xl"></div>
+        </div>
+
+        <!-- ══ TAB: EVENT FLOW ══ -->
+        <div id="tab-flow" class="tab-content hidden">
+            <div class="bg-cardgray border border-bordergray rounded-2xl p-6 max-w-2xl shadow-xl space-y-3 mx-auto">
+                <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider mb-2">Event Progress</h3>
+                <div id="flow-list" class="space-y-2 text-sm font-rajdhani">Loading...</div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- ── Feedback Modal ── -->
+<div id="fb-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-cardgray border border-bordergray rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between">
+            <h3 class="text-sm font-orbitron font-bold text-crimson-500" id="fb-name">Feedback</h3>
+            <button onclick="closeFB()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center" id="fb-scores"></div>
+        <div>
+            <div class="text-[10px] font-orbitron text-gray-400 mb-1 uppercase tracking-widest">AI Feedback</div>
+            <div class="text-sm font-rajdhani text-gray-300 leading-relaxed bg-black/40 rounded-xl p-3 border border-bordergray" id="fb-text"></div>
+        </div>
+        <div class="flex justify-end">
+            <button onclick="closeFB()" class="px-4 py-2 rounded-xl text-xs font-orbitron bg-bordergray text-gray-300 hover:bg-zinc-800">Close</button>
         </div>
     </div>
+</div>
 
-    <!-- Application Script Engine -->
-    <script>
-        // Stopwatch Engine Variables
-        let stopwatchInterval = null;
-        let stopwatchSeconds = 0;
+<script>
+const API = 'http://localhost:3000';
+const MANUAL_EVENTS = ['Code Imposter','Sherlock Holmes','Drawing'];
+const TIMER_EVENTS  = [
+    { name:'Main Event',      secs:2700, label:'Main Event (45 min)' },
+    { name:'FizzBuzz',        secs:900,  label:'FizzBuzz (15 min)' },
+    { name:'Code Imposter',   secs:1200, label:'Code Imposter (20 min)' },
+    { name:'Sherlock Holmes', secs:2700, label:'Sherlock Holmes (45 min)' }
+];
 
-        function startStopwatch() {
-            if (!stopwatchInterval) {
-                stopwatchInterval = setInterval(() => {
-                    stopwatchSeconds++;
-                    updateStopwatchDisplay();
-                }, 1000);
+// ── State ──────────────────────────────────────────────────────────────────────
+let allParticipants   = [];
+let teamScores        = [];
+let podiumData        = [];
+let manualScores      = {};
+let eventProgress     = {};
+let allTimers         = [];   // from /api/event-timers (real event_timers table)
+let fizzSubmissions   = [];   // from /api/admin/fizzbuzz/submissions
+let timerCountdowns   = {};   // local interval handles keyed by event name
+
+// ── Stopwatch ──────────────────────────────────────────────────────────────────
+let _swInt=null,_swSec=0;
+function startSW(){ if(!_swInt) _swInt=setInterval(()=>{_swSec++;updateSWDisplay();},1000); }
+function stopSW(){  clearInterval(_swInt);_swInt=null; }
+function resetSW(){ stopSW();_swSec=0;updateSWDisplay(); }
+function updateSWDisplay(){let h=Math.floor(_swSec/3600),m=Math.floor((_swSec%3600)/60),s=_swSec%60;document.getElementById('sw-display').innerText=p(h)+':'+p(m)+':'+p(s);}
+function p(n){return String(n).padStart(2,'0');}
+
+// ── Escape ─────────────────────────────────────────────────────────────────────
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+// ── Tab ────────────────────────────────────────────────────────────────────────
+function switchTab(id){
+    document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
+    document.getElementById('tab-'+id).classList.remove('hidden');
+    document.querySelectorAll('aside nav button').forEach(b=>{
+        b.className='w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all';
+    });
+    document.getElementById('nav-'+id).className='w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-crimson-600 text-white shadow-lg shadow-crimson-600/30 transition-all';
+    const titles={overview:'Overview',participants:'Participants',timers:'Event Timers',fizzbuzz:'FizzBuzz Monitor',manual:'Manual Scoring',podium:'Team Podium',flow:'Event Flow'};
+    document.getElementById('header-title').innerText=titles[id]||id;
+    if(id==='overview')     renderOverview();
+    if(id==='participants') renderParticipants();
+    if(id==='timers')       { renderTimers(); refreshFizzToggle(); }
+    if(id==='fizzbuzz')     renderFizzBuzzMonitor();
+    if(id==='manual')       renderManual();
+    if(id==='podium')       renderPodium();
+    if(id==='flow')         renderFlow();
+}
+
+function toggleAcc(id){
+    const b=document.getElementById(id+'-body'),ic=document.getElementById(id+'-icon');
+    b.classList.toggle('hidden'); ic.innerText=b.classList.contains('hidden')?'▼':'▲';
+}
+
+// ── Fetch ──────────────────────────────────────────────────────────────────────
+async function fetchAll(){
+    try {
+        const [r1,r2,r3,r4,r5,r6,r7] = await Promise.all([
+            fetch(API+'/api/admin/participants').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/admin/team-scores').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/admin/podium').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/admin/manual-scores').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/admin/event-progress').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/event-timers').then(r=>r.json()).catch(()=>({success:false})),
+            fetch(API+'/api/admin/fizzbuzz/submissions-v2').then(r=>r.json()).catch(()=>({success:false}))
+        ]);
+        allParticipants = r1.success ? (r1.participants||[]) : [];
+        teamScores      = r2.success ? (r2.scores||[])       : [];
+        podiumData      = r3.success ? (r3.podium||[])        : [];
+        eventProgress   = r5.success ? (r5.progress||{})     : {};
+        allTimers       = Array.isArray(r6) ? r6 : (r6.timers || r6.data || []);
+        fizzSubmissions = r7.success ? (r7.submissions||[])   : [];
+
+        manualScores={};
+        MANUAL_EVENTS.forEach(ev=>{ manualScores[ev]={}; });
+        (r4.success ? (r4.scores||[]) : []).forEach(s=>{
+            if(!manualScores[s.event_name]) manualScores[s.event_name]={};
+            manualScores[s.event_name][s.original_team]=s.marks;
+        });
+
+        const evaluated = allParticipants.filter(a=>a.submission_status==='Evaluated').length;
+        document.getElementById('sidebar-status').innerText=`${evaluated}/${allParticipants.length} Evaluated`;
+        populateFilters();
+    } catch(ex){ console.error('fetchAll',ex); }
+}
+
+async function loadTimers(){
+    try {
+        const r = await fetch(API+'/api/event-timers');
+        const d = await r.json();
+        // Normalise: API returns { success, timers:[...] } or a raw array
+        const timers = Array.isArray(d) ? d : (d.timers || d.data || []);
+        if(timers.length > 0) {
+            allTimers = timers;
+            // Only re-render timer cards if the timers tab is visible (avoid DOM churn)
+            const timersTab = document.getElementById('tab-timers');
+            if(timersTab && !timersTab.classList.contains('hidden')) {
+                renderTimers();
             }
+        } else if(!d.success) {
+            const grid = document.getElementById('timers-grid');
+            if(grid) grid.innerHTML = '<div class="col-span-2 text-rose-400 font-orbitron text-sm text-center py-8">Error loading timers: ' + e(d.message||'Unknown error') + '</div>';
+        }
+        syncTimerRefresh();
+    } catch(ex){
+        stopTimerRefresh();
+        const grid = document.getElementById('timers-grid');
+        if(grid) grid.innerHTML = '<div class="col-span-2 text-rose-400 font-orbitron text-sm text-center py-8">Cannot reach backend. Is server running?</div>';
+    }
+}
+
+async function refreshAll(){ await fetchAll(); renderCurrentTab(); }
+
+function renderCurrentTab(){
+    const el=document.querySelector('.tab-content:not(.hidden)');
+    if(!el) return;
+    const id=el.id.replace('tab-','');
+    if(id==='overview')     renderOverview();
+    if(id==='participants') renderParticipants();
+    if(id==='timers')       { renderTimers(); refreshFizzToggle(); }
+    if(id==='fizzbuzz')     renderFizzBuzzMonitor();
+    if(id==='manual')       renderManual();
+    if(id==='podium')       renderPodium();
+    if(id==='flow')         renderFlow();
+}
+
+function populateFilters(){
+    const teams  = [...new Set(allParticipants.map(p=>p.original_team).filter(Boolean))].sort();
+    const groups = [...new Set(allParticipants.map(p=>p.shuffled_group).filter(Boolean))].sort((a,b)=>{
+        return parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,''));
+    });
+    const tSel=document.getElementById('f-team');
+    const gSel=document.getElementById('f-group');
+    if(tSel && tSel.options.length<=1) teams.forEach(t=>{const o=document.createElement('option');o.value=t;o.text=t;tSel.appendChild(o);});
+    if(gSel && gSel.options.length<=1) groups.forEach(g=>{const o=document.createElement('option');o.value=g;o.text=g;gSel.appendChild(o);});
+}
+
+// ── Status badge ───────────────────────────────────────────────────────────────
+function badge(status){
+    if(status==='Evaluated') return '<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-orbitron">✅ Evaluated</span>';
+    if(status==='Submitted') return '<span class="px-2 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 font-orbitron">⏳ Submitted</span>';
+    return '<span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-orbitron">⬜ Pending</span>';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 2 + 3 + 12 — OVERVIEW
+// ══════════════════════════════════════════════════════════════════════════════
+function renderOverview(){
+    const total     = allParticipants.length;
+    const submitted = allParticipants.filter(a=>a.submission_status==='Submitted'||a.submission_status==='Evaluated').length;
+    const evaluated = allParticipants.filter(a=>a.submission_status==='Evaluated').length;
+    const pending   = total - submitted;
+
+    document.getElementById('cnt-registered').innerText = total||'--';
+    document.getElementById('cnt-submitted').innerText  = submitted;
+    document.getElementById('cnt-evaluated').innerText  = evaluated;
+    document.getElementById('cnt-pending').innerText    = pending;
+
+    // Conditions preview
+    document.getElementById('prev-status').innerHTML =
+        `<div class="flex justify-between"><span>Registered:</span><strong class="text-white">${total}/24</strong></div>`+
+        `<div class="flex justify-between"><span>GitHub Submitted:</span><strong class="text-amber-400">${submitted}/24</strong></div>`+
+        `<div class="flex justify-between"><span>AI Evaluated:</span><strong class="text-emerald-400">${evaluated}/24</strong></div>`+
+        `<div class="flex justify-between"><span>Pending:</span><strong class="text-rose-400">${pending}/24</strong></div>`;
+
+    // Team score preview
+    document.getElementById('prev-scores').innerHTML = teamScores.slice(0,6).map(t=>
+        `<div class="flex justify-between items-center bg-black/60 px-2 py-1 rounded border border-bordergray">
+            <span class="text-gray-300">${e(t.team)}</span>
+            <span class="text-crimson-500 font-bold">${t.grand_total} pts</span>
+        </div>`).join('') || '<div class="text-gray-500">No scores yet.</div>';
+
+    // Feature 2 — Recent submissions
+    const recent = allParticipants.filter(a=>a.github_repo).sort((a,b)=>new Date(b.submitted_at)-new Date(a.submitted_at)).slice(0,6);
+    document.getElementById('ov-recent').innerHTML = recent.length===0
+        ? '<div class="text-center py-3 text-gray-500">No submissions yet.</div>'
+        : recent.map(p=>`<div class="flex items-center justify-between bg-black/40 border border-bordergray rounded-xl px-3 py-2.5">
+            <div>
+                <div class="font-bold text-white text-sm">${e(p.participant_name)}</div>
+                <div class="text-gray-400 text-[11px]">${e(p.original_team)} · ${e(p.shuffled_group)} · Task ${p.task_number||'?'}</div>
+                ${p.submitted_at?`<div class="text-gray-500 text-[10px]">${new Date(p.submitted_at).toLocaleTimeString()}</div>`:''}
+            </div>
+            <div class="flex items-center gap-2">
+                ${badge(p.submission_status)}
+                ${p.ai_score!=null?`<span class="font-orbitron font-bold text-cyan-400 text-sm">${p.ai_score}<span class="text-gray-500 text-[10px]">/100</span></span>`:''}
+                ${p.github_repo?`<a href="${e(p.github_repo)}" target="_blank" class="text-crimson-500 hover:underline text-[11px]">🔗</a>`:''}
+            </div>
+        </div>`).join('');
+
+    // Feature 3 — Task assignments by group
+    const byGroup = {};
+    allParticipants.forEach(p=>{
+        if(!byGroup[p.shuffled_group]) byGroup[p.shuffled_group]=[];
+        byGroup[p.shuffled_group].push(p);
+    });
+    const sortedGroups = Object.keys(byGroup).sort((a,b)=>parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,'')));
+
+    document.getElementById('ov-tasks').innerHTML = sortedGroups.length===0
+        ? '<div class="text-gray-500 text-center py-3">Run shuffle to see task assignments.</div>'
+        : sortedGroups.map(gn=>{
+            const members = byGroup[gn].sort((a,b)=>(a.person_slot||99)-(b.person_slot||99));
+            const taskNum = members[0]?.task_number||'?';
+            const taskTitle = members[0]?.task_title||'';
+            return `<div class="bg-black/30 border border-bordergray rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="font-orbitron text-xs font-bold text-cyan-400">${e(gn)}</span>
+                    <span class="text-[10px] bg-crimson-600/20 text-crimson-500 border border-crimson-600/30 px-2 py-0.5 rounded font-orbitron">Task ${taskNum}</span>
+                    <span class="text-[10px] text-gray-400">${e(taskTitle)}</span>
+                </div>
+                ${members.map(m=>`<div class="flex items-center gap-2 text-xs py-0.5">
+                    <span class="text-gray-400 font-mono w-4">${m.person_slot||'?'}</span>
+                    <span class="text-white font-bold">${e(m.participant_name)}</span>
+                    <span class="text-gray-500">—</span>
+                    <span class="text-gray-400">${e(m.role_name||'')}</span>
+                    ${m.is_imposter?'<span class="text-[9px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-1 rounded">IMPOSTER</span>':''}
+                </div>`).join('')}
+            </div>`;
+        }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 1 + 4 + 5 + 6 — PARTICIPANTS
+// ══════════════════════════════════════════════════════════════════════════════
+function renderParticipants(){
+    const statusF = document.getElementById('f-status')?.value||'all';
+    const teamF   = document.getElementById('f-team')?.value  ||'all';
+    const groupF  = document.getElementById('f-group')?.value ||'all';
+
+    let rows = [...allParticipants];
+    if(statusF!=='all') rows=rows.filter(r=>r.submission_status===statusF);
+    if(teamF  !=='all') rows=rows.filter(r=>r.original_team===teamF);
+    if(groupF !=='all') rows=rows.filter(r=>r.shuffled_group===groupF);
+    rows.sort((a,b)=>{
+        const gA=parseInt((a.shuffled_group||'').replace(/\D/g,'')||99);
+        const gB=parseInt((b.shuffled_group||'').replace(/\D/g,'')||99);
+        return gA!==gB ? gA-gB : (a.person_slot||99)-(b.person_slot||99);
+    });
+
+    if(rows.length===0){
+        document.getElementById('participants-list').innerHTML='<div class="text-gray-500 font-orbitron text-sm text-center py-8">No participants match filter.</div>';
+        return;
+    }
+
+    document.getElementById('participants-list').innerHTML = rows.map(p=>{
+        const isSubmitted  = p.submission_status==='Submitted';
+        const isEvaluated  = p.submission_status==='Evaluated';
+        const hasRepo      = !!p.github_repo;
+        const canUnlock    = isSubmitted || isEvaluated;
+
+        return `<div class="bg-cardgray border border-bordergray rounded-xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap mb-1">
+                    <span class="font-bold text-white">${e(p.participant_name)}</span>
+                    ${badge(p.submission_status)}
+                    ${p.is_imposter?'<span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 font-orbitron">IMPOSTER</span>':''}
+                </div>
+                <div class="text-gray-400 text-xs font-mono">
+                    ${e(p.original_team||'—')} → ${e(p.shuffled_group||'—')} · Task ${p.task_number||'?'} · Slot ${p.person_slot||'?'} · ${e(p.role_name||'—')}
+                </div>
+                ${p.submitted_at?`<div class="text-gray-500 text-[11px]">Submitted: ${new Date(p.submitted_at).toLocaleString()}</div>`:''}
+                <!-- Feature 6: individual scores -->
+                <div class="flex gap-3 mt-1 text-[11px] font-mono">
+                    ${p.main_event_score>0?`<span class="text-cyan-400">Main Event: <strong>${p.main_event_score}</strong></span>`:''}
+                    ${p.fizzbuzz_score>0  ?`<span class="text-emerald-400">FizzBuzz: <strong>${p.fizzbuzz_score}</strong></span>`:''}
+                    ${isEvaluated&&p.ai_score!=null?`<span class="text-violet-400">AI Score: <strong>${p.ai_score}</strong>/100</span>`:''}
+                </div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                ${hasRepo?`<a href="${e(p.github_repo)}" target="_blank" class="text-xs font-orbitron px-2.5 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-600/30 hover:bg-cyan-600 hover:text-white transition-all">🔗 Repo</a>`:''}
+                ${canUnlock?`<button onclick="unlockSubmission('${e(p.participant_id)}',this)" class="text-xs font-orbitron px-2.5 py-1.5 rounded-lg bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white transition-all">🔓 Unlock</button>`:''}
+                ${isSubmitted?`<button onclick="triggerEval('${e(p.participant_id)}','${e(p.participant_name)}',this)" class="text-xs font-orbitron px-2.5 py-1.5 rounded-lg bg-crimson-600/20 text-crimson-500 border border-crimson-600/30 hover:bg-crimson-600 hover:text-white transition-all">🤖 Evaluate</button>`:''}
+                ${(isEvaluated&&p.ai_feedback)?`<button onclick='showFB("${e(p.participant_name)}",${JSON.stringify({ai_score:p.ai_score,ui_score:p.ui_score,task_match_score:p.task_match_score,logic_score:p.logic_score,creativity_score:p.creativity_score,code_quality_score:p.code_quality_score,ai_feedback:p.ai_feedback})})' class="text-xs font-orbitron px-2.5 py-1.5 rounded-lg bg-violet-600/20 text-violet-400 border border-violet-600/30 hover:bg-violet-600 hover:text-white transition-all">📋 Feedback</button>`:''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── Feature 4: Unlock ─────────────────────────────────────────────────────────
+async function unlockSubmission(pid,btn){
+    btn.disabled=true; btn.innerText='Unlocking...';
+    try{
+        const r=await fetch(API+'/api/admin/unlock-submission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({participant_id:pid})});
+        const d=await r.json();
+        if(r.ok&&d.success){ await fetchAll(); renderParticipants(); }
+        else { btn.innerText='❌ Failed'; btn.disabled=false; }
+    }catch(ex){ btn.innerText='❌ Error'; btn.disabled=false; }
+}
+
+// ── Feature 5: Evaluate Now ───────────────────────────────────────────────────
+async function triggerEval(pid,name,btn){
+    btn.disabled=true; btn.innerText='Evaluating...'; btn.className=btn.className+' opacity-50';
+    try{
+        const r=await fetch(API+'/api/evaluate-submission/'+pid,{method:'POST'});
+        const d=await r.json();
+        if(r.ok&&d.success){
+            btn.innerText='✅ '+d.score+'/100';
+            btn.className='text-xs font-orbitron px-2.5 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/20';
+            await fetchAll(); renderParticipants(); renderOverview();
+        } else { btn.innerText='❌ '+(d.message||'Failed'); btn.disabled=false; }
+    }catch(ex){ btn.innerText='❌ Error'; btn.disabled=false; }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 9 + 10 — MANUAL SCORING
+// ══════════════════════════════════════════════════════════════════════════════
+function renderManual(){
+    const teams = [...new Set(allParticipants.map(p=>p.original_team).filter(Boolean))].sort();
+    if(teams.length===0){
+        document.getElementById('manual-events-grid').innerHTML='<div class="col-span-3 text-gray-500 font-orbitron text-sm text-center py-8">Run shuffle first to see teams.</div>';
+        return;
+    }
+
+    document.getElementById('manual-events-grid').innerHTML = MANUAL_EVENTS.map(ev=>`
+        <div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl space-y-4">
+            <h3 class="text-xs font-orbitron font-bold text-crimson-500 uppercase tracking-wider">${e(ev)}</h3>
+            <div class="space-y-3" id="manual-event-${ev.replace(/\s/g,'_')}">
+                ${teams.map(team=>{
+                    const existing = (manualScores[ev]||{})[team];
+                    const hasVal   = existing!=null && existing!==undefined;
+                    return `<div class="bg-black/40 border border-bordergray rounded-xl p-3">
+                        <div class="text-xs font-orbitron text-gray-300 mb-2">${e(team)}</div>
+                        <div class="flex gap-2">
+                            <input type="number" min="0" max="100" value="${hasVal?existing:''}" placeholder="0–100"
+                                id="ms_${ev.replace(/\s/g,'_')}_${team.replace(/\s/g,'_')}"
+                                class="flex-1 bg-black border border-bordergray rounded-lg px-3 py-1.5 text-white font-mono text-sm focus:outline-none focus:border-crimson-500">
+                            <button onclick="saveManualScore('${e(ev)}','${e(team)}',this)"
+                                class="text-xs font-orbitron px-3 py-1.5 rounded-lg ${hasVal?'bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600':'bg-crimson-600/20 text-crimson-500 border border-crimson-600/30 hover:bg-crimson-600'} hover:text-white transition-all">
+                                ${hasVal?'Update':'Save'}
+                            </button>
+                        </div>
+                        ${hasVal?`<div class="text-emerald-400 text-[10px] mt-1 font-orbitron">Saved: ${existing} pts</div>`:''}
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`).join('');
+}
+
+async function saveManualScore(event_name, original_team, btn){
+    const inputId = 'ms_'+event_name.replace(/\s/g,'_')+'_'+original_team.replace(/\s/g,'_');
+    const val = Number(document.getElementById(inputId)?.value);
+    if(isNaN(val)||val<0||val>100){ alert('Enter a valid score (0–100)'); return; }
+    btn.disabled=true; btn.innerText='Saving...';
+    try{
+        const r=await fetch(API+'/api/admin/manual-score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event_name,original_team,marks:val})});
+        const d=await r.json();
+        if(r.ok&&d.success){
+            await fetchAll(); renderManual(); renderPodium(); renderOverview();
+        } else {
+            btn.innerText='❌ Failed';
+            btn.disabled=false;
+            // Show the actual error so we can diagnose
+            alert('Save failed: '+(d.message||JSON.stringify(d)));
+        }
+    }catch(ex){
+        btn.innerText='❌ Error';
+        btn.disabled=false;
+        alert('Network error: '+ex.message);
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 7 + 8 — TEAM PODIUM
+// ══════════════════════════════════════════════════════════════════════════════
+function renderPodium(){
+    if(podiumData.length===0){
+        document.getElementById('podium-top3').innerHTML='<div class="col-span-3 text-center text-gray-500 font-orbitron text-sm py-8">No scores yet.</div>';
+        document.getElementById('podium-table').innerHTML='';
+        return;
+    }
+
+    const medals=['🥇','🥈','🥉'];
+    const topColors=['border-amber-500/40 bg-amber-950/10','border-gray-400/40 bg-gray-900/20','border-orange-700/40 bg-orange-950/10'];
+    const textColors=['text-amber-400','text-gray-300','text-orange-500'];
+
+    document.getElementById('podium-top3').innerHTML = podiumData.slice(0,3).map((t,i)=>`
+        <div class="bg-cardgray border ${topColors[i]} rounded-2xl p-6 shadow-xl text-center space-y-2">
+            <div class="text-4xl">${medals[i]}</div>
+            <div class="font-orbitron font-bold text-white text-base tracking-wide">${e(t.team)}</div>
+            <div class="font-orbitron font-bold ${textColors[i]} text-3xl">${t.grand_total}</div>
+            <div class="text-xs text-gray-400 font-orbitron space-y-0.5">
+                <div>Main Event: ${t.main_event_total}</div>
+                <div>FizzBuzz: ${t.fizzbuzz_total}</div>
+                <div>Manual Events: ${t.manual_total}</div>
+                <div class="text-gray-500">${t.members_scored}/4 individually scored</div>
+            </div>
+        </div>`).join('');
+
+    document.getElementById('podium-table').innerHTML =
+        `<h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider mb-3">Full Rankings</h3>`+
+        `<table class="w-full text-sm font-rajdhani border-collapse">`+
+        `<thead><tr class="text-[10px] font-orbitron text-gray-400 border-b border-bordergray">`+
+        `<th class="text-left pb-2">Rank</th><th class="text-left pb-2">Team</th>`+
+        `<th class="text-right pb-2">Main Event</th><th class="text-right pb-2">FizzBuzz</th>`+
+        `<th class="text-right pb-2">Manual</th><th class="text-right pb-2">Grand Total</th></tr></thead><tbody>`+
+        podiumData.map((t,i)=>`<tr class="border-b border-bordergray/40 hover:bg-black/20 transition-colors">
+            <td class="py-2.5 font-orbitron text-gray-400">#${i+1}</td>
+            <td class="py-2.5 font-bold text-white">${e(t.team)}</td>
+            <td class="py-2.5 text-right text-cyan-400">${t.main_event_total}</td>
+            <td class="py-2.5 text-right text-emerald-400">${t.fizzbuzz_total}</td>
+            <td class="py-2.5 text-right text-amber-400">${t.manual_total}</td>
+            <td class="py-2.5 text-right font-orbitron font-bold text-white">${t.grand_total}</td>
+        </tr>`).join('')+`</tbody></table>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PART 6 — EVENT TIMERS
+// ══════════════════════════════════════════════════════════════════════════════
+function fmtSecs(s){
+    s = Math.max(0, Math.floor(s));
+    const m = Math.floor(s/60), sec = s%60;
+    return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function timerStatusColor(status){
+    if(status==='running')  return 'text-emerald-400';
+    if(status==='paused')   return 'text-amber-400';
+    if(status==='finished') return 'text-rose-400';
+    return 'text-gray-400';
+}
+
+function timerStatusLabel(status){
+    if(status==='running')  return '▶ Running';
+    if(status==='paused')   return '⏸ Paused';
+    if(status==='finished') return '⏹ Finished';
+    return '⏺ Idle';
+}
+
+function renderTimers(){
+    const grid = document.getElementById('timers-grid');
+    if(!grid) return;
+
+    if(allTimers.length === 0){
+        grid.innerHTML = '<div class="col-span-2 text-gray-500 font-orbitron text-xs text-center py-8">No timer data received. Check that event_timers table has rows and backend is running.</div>';
+        return;
+    }
+
+    // Clear any old per-card intervals (legacy cleanup)
+    Object.values(timerCountdowns).forEach(clearInterval);
+    timerCountdowns = {};
+
+    grid.innerHTML = allTimers.map(t => {
+        const key    = t.event_key || t.event_name;
+        const enc    = key.replace(/[^a-zA-Z0-9]/g,'_');
+        const sColor = timerStatusColor(t.status);
+        const durSecs = t.duration_minutes ? t.duration_minutes*60 : (t.duration_secs||900);
+
+        // Calculate live displaySeconds using started_at offset
+        let displaySeconds = t.remaining_seconds != null ? t.remaining_seconds : (t.remaining_secs != null ? t.remaining_secs : 0);
+        if (t.status === 'running' && t.started_at) {
+            const elapsed = Math.floor((Date.now() - new Date(t.started_at).getTime()) / 1000);
+            displaySeconds = Math.max(0, displaySeconds - elapsed);
         }
 
-        function stopStopwatch() {
-            clearInterval(stopwatchInterval);
-            stopwatchInterval = null;
+        return `<div class="bg-cardgray border border-bordergray rounded-2xl p-5 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-orbitron font-bold text-white">${e(t.event_name)}</h3>
+                <span class="text-xs font-orbitron ${sColor}" id="ts-label-${enc}">${timerStatusLabel(t.status)}</span>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-orbitron font-bold ${sColor} tracking-widest" id="ts-display-${enc}">${fmtSecs(displaySeconds)}</div>
+                <div class="text-xs text-gray-500 mt-1 font-orbitron">/ ${fmtSecs(durSecs)} total</div>
+            </div>
+            <div class="flex gap-2 flex-wrap justify-center">
+                <button onclick="timerAction('${e(key)}','start',this)"
+                    class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-all"
+                    ${t.status==='running'||t.status==='finished'?'disabled':''}>▶ Start</button>
+                <button onclick="timerAction('${e(key)}','pause',this)"
+                    class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-amber-600/20 text-amber-400 border border-amber-500/30 hover:bg-amber-600 hover:text-white transition-all"
+                    ${t.status!=='running'?'disabled':''}>⏸ Pause</button>
+                <button onclick="timerAction('${e(key)}','resume',this)"
+                    class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-600/30 hover:bg-cyan-600 hover:text-white transition-all"
+                    ${t.status!=='paused'?'disabled':''}>▶▶ Resume</button>
+                <button onclick="timerAction('${e(key)}','reset',this)"
+                    class="text-xs font-orbitron px-3 py-1.5 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition-all">↺ Reset</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── 1-second live refresh for timer cards when any timer is running ────────────
+var _timerRefreshInterval = null;
+
+function startTimerRefresh(){
+    if(_timerRefreshInterval) return;  // already running
+    _timerRefreshInterval = setInterval(loadTimers, 1000);
+}
+
+function stopTimerRefresh(){
+    clearInterval(_timerRefreshInterval);
+    _timerRefreshInterval = null;
+}
+
+// Called after loadTimers updates allTimers — start/stop 1s refresh as needed
+function syncTimerRefresh(){
+    const anyRunning = allTimers.some(t => t.status === 'running');
+    if(anyRunning) startTimerRefresh();
+    else           stopTimerRefresh();
+}
+
+async function timerAction(eventKey, action, btn){
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = '...';
+    try {
+        // New schema: /api/event/start|pause|resume|reset with body {eventKey}
+        const r = await fetch(`${API}/api/event/${action}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ eventKey })
+        });
+        const d = await r.json();
+        if(!d.success) {
+            btn.textContent = '❌';
+            setTimeout(()=>{ btn.textContent=orig; btn.disabled=false; }, 1500);
+            return;
         }
+        await loadTimers();
+    } catch(ex) {
+        btn.textContent = '❌';
+        setTimeout(()=>{ btn.textContent=orig; btn.disabled=false; }, 1500);
+    }
+}
 
-        function resetStopwatch() {
-            stopwatch();
-            stopwatchSeconds = 0;
-            updateStopwatchDisplay();
-        }
+// ══════════════════════════════════════════════════════════════════════════════
+// PART 11 — FIZZBUZZ MONITOR
+// ══════════════════════════════════════════════════════════════════════════════
+function renderFizzBuzzMonitor(){
+    const submitted = fizzSubmissions.length;
+    const pending   = Math.max(0, 6 - submitted);
 
-        function restartStopwatch() {
-            stopwatch();
-            stopwatchSeconds = 0;
-            updateStopwatchDisplay();
-            startStopwatch();
-        }
+    const el = (id) => document.getElementById(id);
+    if(el('fb-cnt-submitted')) el('fb-cnt-submitted').innerText = submitted;
+    if(el('fb-cnt-pending'))   el('fb-cnt-pending').innerText   = pending;
+    if(el('fb-first'))         el('fb-first').innerText  = fizzSubmissions[0]?.shuffled_group || '—';
+    if(el('fb-second'))        el('fb-second').innerText = fizzSubmissions[1]?.shuffled_group || '—';
 
-        function stopwatch() {
-            clearInterval(stopwatchInterval);
-            stopwatchInterval = null;
-        }
+    const container = el('fizzbuzz-groups');
+    if(!container) return;
 
-        function updateStopwatchDisplay() {
-            let hrs = Math.floor(stopwatchSeconds / 3600);
-            let mins = Math.floor((stopwatchSeconds % 3600) / 60);
-            let secs = stopwatchSeconds % 60;
-            document.getElementById('stopwatch-display').innerText = 
-                String(hrs).padStart(2, '0') + ":" + 
-                String(mins).padStart(2, '0') + ":" + 
-                String(secs).padStart(2, '0');
-        }
+    // Build a set of all 6 groups from participants
+    const allGroups = [...new Set(allParticipants.map(p=>p.shuffled_group).filter(Boolean))].sort((a,b)=>
+        parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,'')));
 
-        const eventsList = [
-            { id: 1, name: 'Imposter Project', type: 'AI', isOpen: true },
-            { id: 2, name: 'FizzBuzz', type: 'AI', isOpen: false },
-            { id: 3, name: 'Code Imposter', type: 'Manual', isOpen: false },
-            { id: 4, name: 'Sherlock Holmes', type: 'Manual', isOpen: false },
-            { id: 5, name: 'Drawing', type: 'Manual', isOpen: false }
-        ];
+    const subByGroup = {};
+    fizzSubmissions.forEach(s => { subByGroup[s.shuffled_group] = s; });
 
-        let submissions = [
-            { id: 1, participantName: 'Arpitha Bose', originalTeam: 'Team 1', event: 'Imposter Project', status: 'Submitted', timestamp: '04:12', aiScore: 94, juryMarks: 0, link: 'https://github.com/arpitha/imposter' },
-            { id: 2, participantName: 'Rahul Menon', originalTeam: 'Team 1', event: 'FizzBuzz', status: 'Submitted', timestamp: '03:04', aiScore: 88, juryMarks: 0, link: 'https://github.com/rahul/fizzbuzz' },
-            { id: 3, participantName: 'Sarah Williams', originalTeam: 'Team 2', event: 'Code Imposter', status: 'Submitted', timestamp: '05:20', aiScore: 0, juryMarks: 85, link: 'https://github.com/sarah/code' },
-            { id: 4, participantName: 'David Miller', originalTeam: 'Team 3', event: 'Drawing', status: 'Submitted', timestamp: '02:45', aiScore: 0, juryMarks: 92, link: 'https://drive.google.com/drawing' },
-            { id: 5, participantName: 'Ananya Sharma', originalTeam: 'Team 4', event: 'Sherlock Holmes', status: 'Pending', timestamp: '--:--', aiScore: 0, juryMarks: 0, link: '#' }
-        ];
+    if(allGroups.length === 0){
+        container.innerHTML = '<div class="text-gray-500 font-orbitron text-sm text-center py-4">Run shuffle first to see groups.</div>';
+        return;
+    }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-
-            document.querySelectorAll('aside nav button').forEach(btn => {
-                btn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:bg-cardgray hover:text-gray-200 transition-all";
-            });
-            document.getElementById(`nav-${tabId}`).className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-crimson-600 text-white shadow-lg shadow-crimson-600/30 transition-all";
-
-            const titles = {
-                'overview': 'Overview',
-                'submissions': 'Participants',
-                'leaderboard': 'Original Team Podium',
-                'visibility': 'Event Flow & Gating Toggle'
-            };
-            document.getElementById('header-title').innerText = titles[tabId];
-
-            if(tabId === 'overview') renderOverviewConsolidated();
-            if(tabId === 'submissions') renderGradingEventsPanel();
-            if(tabId === 'leaderboard') renderLeaderboard();
-            if(tabId === 'visibility') renderGatingControl();
-        }
-
-        function toggleAccordion(id) {
-            let content = document.getElementById(`content-${id}`);
-            let icon = document.getElementById(`icon-${id}`);
-            if(content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.innerText = '▲';
-            } else {
-                content.classList.add('hidden');
-                icon.innerText = '▼';
-            }
-        }
-
-        function handleEventTypeChange() {
-            let eventName = document.getElementById('manual-event').value;
-            let evObj = eventsList.find(e => e.name === eventName);
-            let aiContainer = document.getElementById('ai-score-container');
-            let juryContainer = document.getElementById('jury-score-container');
-
-            if(evObj && evObj.type === 'AI') {
-                aiContainer.classList.remove('hidden');
-                juryContainer.classList.add('hidden');
-            } else {
-                aiContainer.classList.add('hidden');
-                juryContainer.classList.remove('hidden');
-            }
-        }
-
-        // 1. Render Overview
-        function renderOverviewConsolidated() {
-            let activeOpenEvents = eventsList.filter(e => e.isOpen).map(e => e.name).join(', ') || 'None Open';
-            document.getElementById('sidebar-active-event').innerText = eventsList.find(e => e.isOpen)?.name ? `${eventsList.find(e => e.isOpen).name} (Open)` : 'All Locked';
-
-            let gatingPreviewHtml = '';
-            eventsList.forEach(ev => {
-                gatingPreviewHtml += `<div class="flex justify-between"><span>${ev.name}:</span> <strong class="${ev.isOpen ? 'text-emerald-400' : 'text-rose-400'}">${ev.isOpen ? 'OPEN' : 'LOCKED'}</strong></div>`;
-            });
-            document.getElementById('preview-active-gating').innerHTML = gatingPreviewHtml;
-
-            let teamTotalsPreview = {};
-            for(let i=1; i<=6; i++) teamTotalsPreview[`Team ${i}`] = 0;
-            submissions.forEach(s => {
-                if(s.status === 'Submitted' && teamTotalsPreview[s.originalTeam] !== undefined) {
-                    let evObj = eventsList.find(e => e.name === s.event);
-                    let score = (evObj && evObj.type === 'AI') ? (s.aiScore || 0) : (s.juryMarks || 0);
-                    teamTotalsPreview[s.originalTeam] += score;
-                }
-            });
-
-            let sideStandingsContainer = document.getElementById('preview-team-standings');
-            sideStandingsContainer.innerHTML = '';
-            Object.keys(teamTotalsPreview).forEach(tName => {
-                sideStandingsContainer.innerHTML += `
-                    <div class="flex justify-between items-center bg-black/60 px-3 py-1.5 rounded border border-bordergray">
-                        <span class="text-gray-300">${tName}</span>
-                        <span class="text-crimson-500 font-bold">${teamTotalsPreview[tName]} pts</span>
-                    </div>
-                `;
-            });
-
-            let overviewContainer = document.getElementById('overview-events-container');
-            overviewContainer.innerHTML = '';
-
-            eventsList.forEach(ev => {
-                let eventSubs = submissions.filter(s => s.event === ev.name);
-                let teamHtml = '';
-
-                for(let t=1; t<=6; t++) {
-                    let teamName = `Team ${t}`;
-                    let teamParticipants = eventSubs.filter(s => s.originalTeam === teamName);
-                    let participantCardsHtml = '';
-
-                    if(teamParticipants.length > 0) {
-                        teamParticipants.forEach(p => {
-                            let displayScore = (ev.type === 'AI') ? `${p.aiScore || 0} AI Score` : `${p.juryMarks || 0} Jury Marks`;
-                            let statusBadge = p.status === 'Submitted' 
-                                ? `<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Graded</span>` 
-                                : `<span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20">❌ Pending</span>`;
-
-                            participantCardsHtml += `
-                                <div class="bg-black/60 border border-bordergray p-3 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs font-rajdhani">
-                                    <div>
-                                        <div class="font-bold text-white text-sm">${p.participantName}</div>
-                                        <div class="text-gray-400 font-mono text-[11px]">Score: <strong class="text-emerald-400">${displayScore}</strong></div>
-                                    </div>
-                                    <div class="flex items-center gap-3">
-                                        <span>${statusBadge}</span>
-                                        <span class="font-mono text-cyan-400">⏱️ ${p.timestamp}</span>
-                                        <a href="${p.link && p.link !== '#' ? p.link : '#'}" target="_blank" class="text-crimson-500 hover:underline font-mono text-[11px]">🔗 Link</a>
-                                        <button onclick="openEditModal(${p.id})" class="text-[11px] font-orbitron bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600 hover:text-white px-2 py-0.5 rounded transition-all border border-cyan-600/30">Edit</button>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        participantCardsHtml = `<div class="text-xs text-gray-500 italic p-2">No participants registered under this team for this event.</div>`;
+    container.innerHTML = allGroups.map((gn, idx) => {
+        const sub = subByGroup[gn];
+        if(sub){
+            const scored = sub.is_correct !== null && sub.is_correct !== undefined;
+            const time   = sub.submitted_at ? new Date(sub.submitted_at).toLocaleTimeString() : '--';
+            const rank   = fizzSubmissions.findIndex(s=>s.shuffled_group===gn)+1;
+            return `<div class="bg-black/40 border border-emerald-500/30 rounded-xl px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                    <span class="font-orbitron text-xs font-bold text-emerald-400">${e(gn)}</span>
+                    <span class="ml-2 text-[10px] text-gray-400">#${rank} · by ${e(sub.submitted_by)} · ${time}</span>
+                    ${sub.imposter_sabotaged ? '<span class="ml-2 text-[9px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-1 rounded font-orbitron">⚠ SABOTAGE DETECTED</span>' : ''}
+                </div>
+                <div class="flex gap-2 items-center">
+                    ${scored
+                        ? `<span class="text-[10px] font-orbitron ${sub.is_correct?'text-emerald-400':'text-rose-400'}">${sub.is_correct?'✅ Correct':'❌ Wrong'}</span>`
+                        : `<button onclick="scoreFizzGroup('${e(gn)}',true,this)"  class="text-xs font-orbitron px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-600 hover:text-white transition-all">✅ Mark Correct</button>
+                           <button onclick="scoreFizzGroup('${e(gn)}',false,this)" class="text-xs font-orbitron px-2.5 py-1 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/20 hover:bg-rose-600 hover:text-white transition-all">❌ Mark Wrong</button>`
                     }
-
-                    teamHtml += `
-                        <div class="bg-cardgray/70 border border-bordergray/60 p-4 rounded-xl space-y-3">
-                            <div class="flex items-center justify-between border-b border-bordergray pb-1.5">
-                                <h5 class="font-orbitron font-bold text-xs text-crimson-500 tracking-wider uppercase">${teamName}</h5>
-                                <button onclick="openModalForTeamEvent('${teamName}', '${ev.name}')" class="text-[10px] font-orbitron bg-crimson-600/20 text-rose-400 hover:bg-crimson-600 hover:text-white px-2 py-0.5 rounded transition-all border border-crimson-600/30">+ Add Member</button>
-                            </div>
-                            <div class="space-y-2">
-                                ${participantCardsHtml}
-                            </div>
-                        </div>
-                    `;
-                }
-
-                overviewContainer.innerHTML += `
-                    <div class="bg-cardgray border border-bordergray rounded-2xl p-6 shadow-xl space-y-6">
-                        <div class="flex items-center justify-between border-b border-bordergray pb-3">
-                            <h3 class="text-base font-orbitron font-bold text-white tracking-wide uppercase flex items-center gap-2">
-                                <span class="text-crimson-500">#</span> ${ev.name} <span class="text-xs text-gray-400 font-mono font-normal">(${ev.type === 'AI' ? 'AI-Only' : 'Manual Jury-Only'})</span>
-                            </h3>
-                            <div class="flex items-center gap-3">
-                                <button onclick="openModalForEvent('${ev.name}')" class="text-xs font-orbitron bg-crimson-600 text-white hover:bg-crimson-700 px-3 py-1 rounded-lg transition-all shadow-md">+ Add Participant</button>
-                                <span class="px-3 py-1 rounded text-xs font-orbitron border ${ev.isOpen ? 'text-emerald-400 border-emerald-500/30 bg-emerald-950/20' : 'text-rose-400 border-rose-500/30 bg-rose-950/20'}">
-                                    ${ev.isOpen ? 'OPEN' : 'LOCKED'}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${teamHtml}
-                        </div>
-                    </div>
-                `;
-            });
+                </div>
+            </div>`;
+        } else {
+            return `<div class="bg-black/20 border border-bordergray rounded-xl px-4 py-3 flex items-center justify-between">
+                <span class="font-orbitron text-xs text-gray-500">${e(gn)}</span>
+                <span class="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded font-orbitron">⬜ Pending</span>
+            </div>`;
         }
+    }).join('');
+}
 
-        // 2. Render Participants Panel
-        function renderGradingEventsPanel() {
-            let container = document.getElementById('grading-events-container');
-            container.innerHTML = '';
+async function scoreFizzGroup(shuffled_group, is_correct, btn){
+    btn.disabled = true; btn.textContent = '...';
+    try {
+        const r = await fetch(API+'/api/admin/fizzbuzz/score-v2', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ shuffled_group, is_correct })
+        });
+        const d = await r.json();
+        if(d.success){ await fetchAll(); renderFizzBuzzMonitor(); renderPodium(); }
+        else { btn.textContent='❌ '+d.message; btn.disabled=false; }
+    } catch(ex){ btn.textContent='❌ Error'; btn.disabled=false; }
+}
 
-            eventsList.forEach(ev => {
-                let eventSubs = submissions.filter(s => s.event === ev.name);
-                let teamHtml = '';
-
-                for(let t=1; t<=6; t++) {
-                    let teamName = `Team ${t}`;
-                    let teamParticipants = eventSubs.filter(s => s.originalTeam === teamName);
-                    let participantCardsHtml = '';
-
-                    if(teamParticipants.length > 0) {
-                        teamParticipants.forEach(p => {
-                            let displayScore = (ev.type === 'AI') ? `${p.aiScore || 0} AI Score` : `${p.juryMarks || 0} Jury Marks`;
-                            let statusBadge = p.status === 'Submitted' 
-                                ? `<span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Graded</span>` 
-                                : `<span class="px-2 py-0.5 rounded text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20">❌ Pending</span>`;
-
-                            participantCardsHtml += `
-                                <div class="bg-black/60 border border-bordergray p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                                    <div>
-                                        <div class="font-bold text-white text-sm">${p.participantName}</div>
-                                        <div class="text-xs text-gray-400 font-mono">Timestamp: ${p.timestamp}</div>
-                                    </div>
-                                    <div class="flex items-center gap-6">
-                                        <div>
-                                            <div class="text-[10px] text-gray-500 font-orbitron uppercase">${ev.type === 'AI' ? 'AI Score' : 'Jury Marks'}</div>
-                                            <div class="font-mono font-bold text-emerald-400 text-sm">${displayScore}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[10px] text-gray-500 font-orbitron uppercase">Status</div>
-                                            <div>${statusBadge}</div>
-                                        </div>
-                                        <a href="${p.link && p.link !== '#' ? p.link : '#'}" target="_blank" class="text-crimson-500 hover:underline font-mono text-xs">🔗 Link</a>
-                                        <button onclick="openEditModal(${p.id})" class="text-xs font-orbitron bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600 hover:text-white px-2.5 py-1 rounded transition-all border border-cyan-600/30">Edit Marks</button>
-                                        <button onclick="deleteSubmission(${p.id})" class="text-xs text-rose-500 hover:text-rose-400 font-orbitron">Remove</button>
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        participantCardsHtml = `<div class="text-xs text-gray-500 italic p-2">No participants registered under this team for this event module.</div>`;
-                    }
-
-                    teamHtml += `
-                        <div class="bg-cardgray/70 border border-bordergray/60 p-5 rounded-xl space-y-3">
-                            <div class="flex items-center justify-between border-b border-bordergray pb-2">
-                                <h4 class="font-orbitron font-bold text-sm text-crimson-500 uppercase">${teamName}</h4>
-                                <button onclick="openModalForTeamEvent('${teamName}', '${ev.name}')" class="text-xs font-orbitron bg-crimson-600 hover:bg-crimson-700 text-white px-3 py-1 rounded-lg transition-all shadow-md">+ Add to ${teamName}</button>
-                            </div>
-                            <div class="space-y-3">
-                                ${participantCardsHtml}
-                            </div>
-                        </div>
-                    `;
-                }
-
-                container.innerHTML += `
-                    <div class="bg-cardgray border border-bordergray rounded-2xl p-6 shadow-xl space-y-6">
-                        <div class="flex items-center justify-between border-b border-bordergray pb-3">
-                            <h3 class="text-lg font-orbitron font-bold text-white tracking-wide uppercase flex items-center gap-2">
-                                <span class="text-crimson-500">#</span> ${ev.name} <span class="text-xs text-gray-400 font-mono font-normal">(${ev.type === 'AI' ? 'AI-Only' : 'Manual Jury-Only'})</span>
-                            </h3>
-                            <button onclick="openModalForEvent('${ev.name}')" class="text-xs font-orbitron bg-crimson-600 hover:bg-crimson-700 text-white px-3 py-1.5 rounded-lg transition-all shadow-md">+ Add Participant to Event</button>
-                        </div>
-                        <div class="space-y-4">
-                            ${teamHtml}
-                        </div>
-                    </div>
-                `;
-            });
+// ── FizzBuzz ON/OFF toggle ────────────────────────────────────────────────────
+async function toggleFizzBuzz(){
+    const btn = document.getElementById('fb-toggle-btn');
+    const lbl = document.getElementById('fb-toggle-status');
+    const isOn = btn.textContent.trim() === 'Turn OFF';
+    btn.disabled = true; btn.textContent = '...';
+    try {
+        const r = await fetch(API+'/api/admin/fizzbuzz/toggle', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ action: isOn ? 'off' : 'on' })
+        });
+        const d = await r.json();
+        if(d.success){
+            updateFizzBuzzToggleUI(d.fizzbuzz_open);
         }
+        btn.disabled = false;
+    } catch(ex){ btn.textContent = isOn?'Turn OFF':'Turn ON'; btn.disabled=false; }
+}
 
-        function deleteSubmission(id) {
-            submissions = submissions.filter(s => s.id !== id);
-            renderOverviewConsolidated();
-            renderGradingEventsPanel();
-        }
+function updateFizzBuzzToggleUI(isOpen){
+    const btn = document.getElementById('fb-toggle-btn');
+    const lbl = document.getElementById('fb-toggle-status');
+    if(!btn || !lbl) return;
+    if(isOpen){
+        lbl.textContent = 'ON'; lbl.className = 'text-xs font-orbitron text-emerald-400';
+        btn.textContent = 'Turn OFF'; btn.className = 'text-sm font-orbitron px-5 py-2 rounded-lg bg-rose-600/20 text-rose-400 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition-all';
+    } else {
+        lbl.textContent = 'OFF'; lbl.className = 'text-xs font-orbitron text-rose-400';
+        btn.textContent = 'Turn ON'; btn.className = 'text-sm font-orbitron px-5 py-2 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-all';
+    }
+}
 
-        function openManualModal() {
-            document.getElementById('modal-title-text').innerText = "Add Shuffled Participant";
-            document.getElementById('manual-participant-name').value = '';
-            document.getElementById('manual-participant-name').disabled = false;
-            document.getElementById('manual-event').value = 'Imposter Project';
-            document.getElementById('manual-ai').value = 90;
-            document.getElementById('manual-jury').value = 85;
-            document.getElementById('manual-time').value = '03:45';
-            document.getElementById('manual-link').value = 'https://github.com/repo/project';
-            handleEventTypeChange();
-            document.getElementById('manual-modal').classList.remove('hidden');
-        }
+async function refreshFizzToggle(){
+    try {
+        const r = await fetch(API+'/api/fizzbuzz/toggle');
+        const d = await r.json();
+        if(d.success) updateFizzBuzzToggleUI(d.fizzbuzz_open);
+    } catch(e){}
+}
 
-        function openEditModal(id) {
-            let item = submissions.find(s => s.id === id);
-            if(item) {
-                document.getElementById('modal-title-text').innerText = `Edit Marks: ${item.participantName}`;
-                document.getElementById('manual-participant-name').value = item.participantName;
-                document.getElementById('manual-participant-name').disabled = true;
-                document.getElementById('manual-original-team').value = item.originalTeam;
-                document.getElementById('manual-event').value = item.event;
-                document.getElementById('manual-ai').value = item.aiScore || 0;
-                document.getElementById('manual-jury').value = item.juryMarks || 0;
-                document.getElementById('manual-time').value = item.timestamp || '03:00';
-                document.getElementById('manual-link').value = item.link || '#';
-                handleEventTypeChange();
-                document.getElementById('manual-modal').classList.remove('hidden');
-            }
-        }
+// ══════════════════════════════════════════════════════════════════════════════
+// FEATURE 11 — EVENT FLOW
+// ══════════════════════════════════════════════════════════════════════════════
+function renderFlow(){
+    const ph = eventProgress;
+    if(!ph || Object.keys(ph).length===0){
+        document.getElementById('flow-list').innerHTML='<div class="text-gray-500">Loading progress...</div>';
+        return;
+    }
 
-        function openModalForEvent(eventName) {
-            openManualModal();
-            document.getElementById('manual-event').value = eventName;
-            handleEventTypeChange();
-        }
+    const phases=[
+        {key:'registration',    label:'Team Registration',          icon:'👥'},
+        {key:'shuffle',         label:'Imposter Shuffle',           icon:'🔀'},
+        {key:'github_submission',label:'Main Event – GitHub Submission', icon:'📤'},
+        {key:'ai_evaluation',   label:'AI Evaluation',              icon:'🤖'},
+        {key:'fizzbuzz',        label:'FizzBuzz Round',             icon:'📊'},
+        {key:'code_imposter',   label:'Code Imposter Round',        icon:'🔍'},
+        {key:'sherlock_holmes', label:'Sherlock Holmes Round',      icon:'🕵️'},
+        {key:'drawing',         label:'Drawing Round',              icon:'🎨'},
+        {key:'final_podium',    label:'Final Podium',               icon:'🏆'}
+    ];
 
-        function openModalForTeamEvent(teamName, eventName) {
-            openManualModal();
-            document.getElementById('manual-original-team').value = teamName;
-            document.getElementById('manual-event').value = eventName;
-            handleEventTypeChange();
-        }
+    document.getElementById('flow-list').innerHTML = phases.map(ph_item=>{
+        const info = ph[ph_item.key] || {done:false,label:''};
+        const cls  = info.done
+            ? 'bg-emerald-950/20 border-emerald-500/30'
+            : 'bg-cardgray border-bordergray';
+        const textCls = info.done ? 'text-emerald-400' : 'text-gray-400';
+        const icon    = info.done ? '✅' : '⬜';
+        return `<div class="flex items-center justify-between p-3 rounded-xl ${cls} border">
+            <span class="${textCls} font-bold">${icon} ${ph_item.icon} ${e(ph_item.label)}</span>
+            <span class="text-xs text-gray-400 font-orbitron">${e(info.label||'')}</span>
+        </div>`;
+    }).join('');
+}
 
-        function closeManualModal() {
-            document.getElementById('manual-participant-name').disabled = false;
-            document.getElementById('manual-modal').classList.add('hidden');
-        }
+// ── Feedback modal ─────────────────────────────────────────────────────────────
+function showFB(name,data){
+    document.getElementById('fb-name').innerText=name+' — AI Score: '+(data.ai_score||'--')+'/100';
+    const breakdowns=[
+        {l:'UI Design',v:data.ui_score,m:20},{l:'Task Match',v:data.task_match_score,m:30},
+        {l:'Logic',v:data.logic_score,m:25},{l:'Creativity',v:data.creativity_score,m:15},
+        {l:'Code Quality',v:data.code_quality_score,m:10}
+    ];
+    document.getElementById('fb-scores').innerHTML=breakdowns.map(b=>
+        `<div class="bg-black/40 border border-bordergray rounded-xl p-2">
+            <div class="text-[10px] font-orbitron text-gray-400 mb-1">${e(b.l)}</div>
+            <div class="text-base font-orbitron font-bold text-cyan-400">${b.v!=null?b.v:'--'}<span class="text-xs text-gray-500">/${b.m}</span></div>
+        </div>`).join('');
+    document.getElementById('fb-text').innerText=data.ai_feedback||'No feedback available.';
+    document.getElementById('fb-modal').classList.remove('hidden');
+}
+function closeFB(){ document.getElementById('fb-modal').classList.add('hidden'); }
 
-        function saveManualRecord() {
-            let participantName = document.getElementById('manual-participant-name').value.trim();
-            let originalTeam = document.getElementById('manual-original-team').value;
-            let event = document.getElementById('manual-event').value;
-            let time = document.getElementById('manual-time').value.trim();
-            let link = document.getElementById('manual-link').value.trim();
-
-            let evObj = eventsList.find(e => e.name === event);
-            let ai = (evObj && evObj.type === 'AI') ? Number(document.getElementById('manual-ai').value) : 0;
-            let jury = (evObj && evObj.type === 'Manual') ? Number(document.getElementById('manual-jury').value) : 0;
-
-            if(!participantName) { alert("Please enter participant name."); return; }
-
-            let existing = submissions.find(s => s.participantName === participantName && s.event === event);
-            if(existing) {
-                existing.status = 'Submitted';
-                existing.originalTeam = originalTeam;
-                existing.aiScore = ai;
-                existing.juryMarks = jury;
-                existing.timestamp = time || '03:00';
-                existing.link = link || '#';
-            } else {
-                submissions.push({
-                    id: Date.now(),
-                    participantName: participantName,
-                    originalTeam: originalTeam,
-                    event: event,
-                    status: 'Submitted',
-                    timestamp: time || '03:00',
-                    aiScore: ai,
-                    juryMarks: jury,
-                    link: link || '#'
-                });
-            }
-
-            document.getElementById('manual-participant-name').disabled = false;
-            closeManualModal();
-            renderOverviewConsolidated();
-            renderGradingEventsPanel();
-            alert("Participant grades successfully updated.");
-        }
-
-        function renderLeaderboard() {
-            let container = document.getElementById('podium-container');
-            container.innerHTML = '';
-
-            let teamTotals = {};
-            for(let i=1; i<=6; i++) {
-                teamTotals[`Team ${i}`] = { totalMarks: 0, gradedEntries: 0 };
-            }
-
-            submissions.forEach(sub => {
-                if(sub.status === 'Submitted' && teamTotals[sub.originalTeam] !== undefined) {
-                    let evObj = eventsList.find(e => e.name === sub.event);
-                    let score = (evObj && evObj.type === 'AI') ? (sub.aiScore || 0) : (sub.juryMarks || 0);
-                    teamTotals[sub.originalTeam].totalMarks += score;
-                    teamTotals[sub.originalTeam].gradedEntries += 1;
-                }
-            });
-
-            let sortedTeams = Object.keys(teamTotals).map(tName => ({
-                name: tName,
-                totalMarks: teamTotals[tName].totalMarks,
-                entries: teamTotals[tName].gradedEntries
-            })).sort((a,b) => b.totalMarks - a.totalMarks);
-
-            let medals = ['🥇 1ST PLACE', '🥈 2ND PLACE', '🥉 3RD PLACE'];
-            let colors = ['border-amber-500/50 bg-amber-950/10 text-amber-400', 'border-slate-400/50 bg-slate-900/40 text-slate-300', 'border-amber-700/50 bg-amber-950/20 text-amber-600'];
-
-            for (let i = 0; i < 3; i++) {
-                let team = sortedTeams[i];
-
-                container.innerHTML += `
-                    <div class="bg-cardgray border ${colors[i]} rounded-2xl p-6 text-center space-y-3 shadow-xl">
-                        <span class="font-orbitron font-extrabold text-xs tracking-wider">${medals[i]}</span>
-                        <h4 class="text-xl font-bold text-white font-orbitron">${team.name}</h4>
-                        <p class="text-xs text-gray-400 font-mono">Graded Submissions: ${team.entries}</p>
-                        <div class="pt-2 border-t border-bordergray flex justify-around text-xs font-mono">
-                            <span>Cumulative Prize Score: <strong class="text-white">${team.totalMarks} pts</strong></span>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function renderGatingControl() {
-            let container = document.getElementById('event-gating-list');
-            container.innerHTML = '';
-
-            eventsList.forEach(ev => {
-                container.innerHTML += `
-                    <div class="flex items-center justify-between p-4 bg-black rounded-xl border border-bordergray">
-                        <div>
-                            <span class="font-orbitron font-bold text-white text-sm block">${ev.name} <span class="text-xs text-gray-400 font-mono font-normal">(${ev.type === 'AI' ? 'AI-Only' : 'Manual Jury-Only'})</span></span>
-                            <span class="text-xs text-gray-400 font-mono">Frontend Access: <strong class="${ev.isOpen ? 'text-emerald-400' : 'text-rose-400'} uppercase">${ev.isOpen ? 'Open' : 'Locked'}</strong></span>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" ${ev.isOpen ? 'checked' : ''} onchange="toggleEventGating(${ev.id}, this.checked)" class="sr-only peer">
-                            <div class="w-11 h-6 bg-bordergray rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-crimson-600"></div>
-                        </label>
-                    </div>
-                `;
-            });
-        }
-
-        function toggleEventGating(eventId, isOpen) {
-            let ev = eventsList.find(e => e.id === eventId);
-            if(ev) {
-                ev.isOpen = isOpen;
-                renderGatingControl();
-            }
-        }
-
-        window.onload = function() {
-            renderOverviewConsolidated();
-            renderGradingEventsPanel();
-        };
-    </script>
+// ── Init ─────────────────────────────────────────────────────────────────────
+(async function init(){
+    await fetchAll();
+    await refreshFizzToggle();
+    renderOverview();
+    // Full data refresh every 30s (does NOT rebuild timer cards — loadTimers handles that)
+    setInterval(async()=>{ await fetchAll(); await refreshFizzToggle(); renderCurrentTab(); }, 30000);
+    // Start 1s timer refresh if any timer is currently running
+    await loadTimers();
+})();
+</script>
 </body>
 </html>

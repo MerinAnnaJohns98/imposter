@@ -6,65 +6,85 @@
     <title>IMPOSTER PROJECT - Main Event</title>
     <style>
         :root {
-            --bg-black:        #080808;
-            --bg-charcoal:     #141414;
-            --primary-crimson: #dc143c;
-            --primary-red:     #ff1e42;
-            --glow-red:        rgba(220, 20, 60, 0.4);
-            --cyan:            #00f0ff;
-            --green:           #00ff80;
-            --text-main:       #f0f0f0;
-            --text-sub:        #a0a0a0;
-            --border-dark:     #2a2a2a;
-            --border-mid:      #3a3a3a;
+            --bg-black: #080808; --bg-charcoal: #141414;
+            --primary-crimson: #dc143c; --primary-red: #ff1e42;
+            --glow-red: rgba(220,20,60,0.4); --cyan: #00f0ff;
+            --green: #00ff80; --text-main: #f0f0f0; --text-sub: #a0a0a0;
+            --border-dark: #2a2a2a; --border-mid: #3a3a3a;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace, sans-serif; }
-        body { background-color: var(--bg-black); color: var(--text-main); line-height: 1.6; padding-bottom: 60px; }
-        header { background-color: var(--bg-charcoal); border-bottom: 2px solid var(--primary-crimson); padding: 25px 8%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
-        .brand h1 { color: var(--primary-red); font-size: 2.2rem; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 10px var(--glow-red); }
-        .brand span { color: var(--text-sub); font-size: 0.85rem; letter-spacing: 2px; display: block; margin-top: 4px; }
-        .stopwatch-box { background: var(--bg-black); border: 2px solid var(--primary-crimson); padding: 12px 28px; border-radius: 4px; text-align: center; box-shadow: 0 0 15px var(--glow-red); animation: glowPulse 2s infinite alternate; }
-        @keyframes glowPulse { 0% { box-shadow: 0 0 5px var(--glow-red); } 100% { box-shadow: 0 0 20px var(--glow-red); } }
-        .stopwatch-label { font-size: 0.7rem; color: var(--primary-red); text-transform: uppercase; font-weight: bold; letter-spacing: 2px; }
-        .stopwatch-display { font-size: 1.9rem; font-weight: bold; color: var(--text-main); letter-spacing: 2px; }
-        .container { max-width: 820px; margin: 36px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 24px; }
-        .section-header { color: var(--primary-red); font-size: 1.2rem; margin-bottom: 18px; text-transform: uppercase; border-left: 4px solid var(--primary-crimson); padding-left: 12px; letter-spacing: 1px; }
-        .state-card { background-color: var(--bg-charcoal); border: 1px solid var(--border-mid); border-radius: 6px; padding: 28px 30px; text-align: center; color: var(--text-sub); font-size: 1rem; letter-spacing: 1px; }
-        .state-card.error { border-color: var(--primary-crimson); color: var(--primary-red); }
-        .assignment-card { background-color: var(--bg-charcoal); border: 1px solid var(--primary-crimson); border-radius: 6px; padding: 28px 30px; box-shadow: 0 0 20px rgba(0,0,0,0.7); }
-        .meta-row { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border-dark); }
-        .meta-item { display: flex; flex-direction: column; gap: 4px; }
-        .meta-label { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-sub); }
-        .meta-value { font-size: 1rem; font-weight: bold; color: var(--cyan); letter-spacing: 1px; }
-        .task-title-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
-        .task-number-badge { background: var(--primary-crimson); color: #fff; font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; padding: 3px 10px; border-radius: 3px; text-transform: uppercase; white-space: nowrap; }
-        .task-title-text { font-size: 1.2rem; font-weight: 900; color: var(--text-main); letter-spacing: 2px; text-transform: uppercase; }
-        .task-description { font-size: 0.88rem; color: var(--text-sub); line-height: 1.65; margin-bottom: 22px; }
-        .work-block { background: rgba(0,0,0,0.45); border: 1px solid var(--border-mid); border-left: 3px solid var(--cyan); border-radius: 4px; padding: 18px 20px; margin-bottom: 14px; }
-        .work-block.secret { border-left-color: var(--primary-red); background: rgba(220,20,60,0.06); }
-        .work-block-label { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; }
-        .work-block.secret .work-block-label { color: var(--primary-red); }
-        .work-role-title { font-size: 1rem; font-weight: 900; color: var(--cyan); letter-spacing: 1px; margin-bottom: 8px; }
-        .work-block.secret .work-role-title { color: var(--primary-red); }
-        .work-text { font-size: 0.88rem; color: var(--text-main); line-height: 1.7; white-space: pre-wrap; }
-        .form-card { background-color: var(--bg-charcoal); border: 1px solid var(--border-mid); border-radius: 6px; padding: 28px 30px; box-shadow: 0 0 20px rgba(0,0,0,0.7); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: var(--text-sub); font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; }
-        .form-group input[type="url"] { width: 100%; padding: 13px 14px; background-color: var(--bg-black); border: 1px solid var(--border-dark); color: var(--primary-red); font-size: 1rem; border-radius: 4px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; font-family: 'Courier New', monospace; }
-        .form-group input[type="url"]:focus { border-color: var(--primary-crimson); box-shadow: 0 0 8px var(--glow-red); }
-        .form-group input[type="url"]:disabled { opacity: 0.45; cursor: not-allowed; }
-        .btn-submit { width: 100%; padding: 15px; background-color: var(--primary-crimson); color: #fff; border: none; font-size: 1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; border-radius: 4px; transition: background-color 0.25s, box-shadow 0.25s; font-family: 'Courier New', monospace; }
-        .btn-submit:hover:not(:disabled) { background-color: var(--primary-red); box-shadow: 0 0 20px var(--glow-red); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-        .alert-box { margin-top: 18px; padding: 13px 16px; border-radius: 4px; display: none; text-align: center; font-weight: bold; font-size: 0.9rem; line-height: 1.5; }
-        .alert-success { background-color: rgba(0,255,128,0.08); border: 1px solid var(--green); color: var(--green); }
-        .alert-error   { background-color: rgba(220,20,60,0.14);  border: 1px solid var(--primary-crimson); color: var(--primary-red); }
-        .submitted-banner { background: rgba(0,255,128,0.06); border: 1px solid var(--green); border-radius: 4px; padding: 14px 18px; color: var(--green); font-size: 0.88rem; text-align: center; letter-spacing: 1px; word-break: break-all; }
-        @media (max-width: 600px) { header { padding: 18px 5%; } .meta-row { gap: 16px; } .task-title-text { font-size: 1rem; } }
+        * { box-sizing:border-box; margin:0; padding:0; font-family:'Courier New',Courier,monospace,sans-serif; }
+        body { background-color:var(--bg-black); color:var(--text-main); line-height:1.6; padding-bottom:60px; }
+        header { background-color:var(--bg-charcoal); border-bottom:2px solid var(--primary-crimson); padding:25px 8%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
+        .brand h1 { color:var(--primary-red); font-size:2.2rem; font-weight:900; letter-spacing:4px; text-transform:uppercase; text-shadow:0 0 10px var(--glow-red); }
+        .brand span { color:var(--text-sub); font-size:0.85rem; letter-spacing:2px; display:block; margin-top:4px; }
+        .stopwatch-box { background:var(--bg-black); border:2px solid var(--primary-crimson); padding:12px 28px; border-radius:4px; text-align:center; box-shadow:0 0 15px var(--glow-red); animation:glowPulse 2s infinite alternate; }
+        @keyframes glowPulse { 0%{box-shadow:0 0 5px var(--glow-red)} 100%{box-shadow:0 0 20px var(--glow-red)} }
+        .stopwatch-label { font-size:0.7rem; color:var(--primary-red); text-transform:uppercase; font-weight:bold; letter-spacing:2px; }
+        .stopwatch-display { font-size:1.9rem; font-weight:bold; color:var(--text-main); letter-spacing:2px; }
+        .container { max-width:820px; margin:36px auto; padding:0 20px; display:flex; flex-direction:column; gap:24px; }
+        .section-header { color:var(--primary-red); font-size:1.2rem; margin-bottom:18px; text-transform:uppercase; border-left:4px solid var(--primary-crimson); padding-left:12px; letter-spacing:1px; }
+        .state-card { background-color:var(--bg-charcoal); border:1px solid var(--border-mid); border-radius:6px; padding:28px 30px; text-align:center; color:var(--text-sub); font-size:1rem; letter-spacing:1px; }
+        .state-card.error { border-color:var(--primary-crimson); color:var(--primary-red); }
+        .assignment-card { background-color:var(--bg-charcoal); border:1px solid var(--primary-crimson); border-radius:6px; padding:28px 30px; box-shadow:0 0 20px rgba(0,0,0,0.7); }
+        .meta-row { display:flex; gap:28px; flex-wrap:wrap; margin-bottom:22px; padding-bottom:18px; border-bottom:1px solid var(--border-dark); }
+        .meta-item { display:flex; flex-direction:column; gap:4px; }
+        .meta-label { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-sub); }
+        .meta-value { font-size:1rem; font-weight:bold; color:var(--cyan); letter-spacing:1px; }
+        .task-title-row { display:flex; align-items:baseline; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+        .task-number-badge { background:var(--primary-crimson); color:#fff; font-size:0.7rem; font-weight:900; letter-spacing:2px; padding:3px 10px; border-radius:3px; text-transform:uppercase; white-space:nowrap; }
+        .task-title-text { font-size:1.2rem; font-weight:900; color:var(--text-main); letter-spacing:2px; text-transform:uppercase; }
+        .task-description { font-size:0.88rem; color:var(--text-sub); line-height:1.65; margin-bottom:22px; }
+        .work-block { background:rgba(0,0,0,0.45); border:1px solid var(--border-mid); border-left:3px solid var(--cyan); border-radius:4px; padding:18px 20px; margin-bottom:14px; }
+        .work-block.secret { border-left-color:var(--primary-red); background:rgba(220,20,60,0.06); }
+        .work-block-label { font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-sub); margin-bottom:6px; }
+        .work-block.secret .work-block-label { color:var(--primary-red); }
+        .work-role-title { font-size:1rem; font-weight:900; color:var(--cyan); letter-spacing:1px; margin-bottom:8px; }
+        .work-block.secret .work-role-title { color:var(--primary-red); }
+        .work-text { font-size:0.88rem; color:var(--text-main); line-height:1.7; white-space:pre-wrap; }
+        .form-card { background-color:var(--bg-charcoal); border:1px solid var(--border-mid); border-radius:6px; padding:28px 30px; box-shadow:0 0 20px rgba(0,0,0,0.7); }
+        .form-group { margin-bottom:20px; }
+        .form-group label { display:block; margin-bottom:8px; color:var(--text-sub); font-size:0.78rem; letter-spacing:2px; text-transform:uppercase; }
+        .form-group input[type="url"] { width:100%; padding:13px 14px; background-color:var(--bg-black); border:1px solid var(--border-dark); color:var(--primary-red); font-size:1rem; border-radius:4px; outline:none; transition:border-color 0.2s,box-shadow 0.2s; font-family:'Courier New',monospace; }
+        .form-group input[type="url"]:focus { border-color:var(--primary-crimson); box-shadow:0 0 8px var(--glow-red); }
+        .form-group input[type="url"]:disabled { opacity:0.45; cursor:not-allowed; }
+        .btn-submit { width:100%; padding:15px; background-color:var(--primary-crimson); color:#fff; border:none; font-size:1rem; font-weight:bold; text-transform:uppercase; letter-spacing:2px; cursor:pointer; border-radius:4px; transition:background-color 0.25s,box-shadow 0.25s; font-family:'Courier New',monospace; }
+        .btn-submit:hover:not(:disabled) { background-color:var(--primary-red); box-shadow:0 0 20px var(--glow-red); }
+        .btn-submit:disabled { opacity:0.5; cursor:not-allowed; }
+        .alert-box { margin-top:18px; padding:13px 16px; border-radius:4px; display:none; text-align:center; font-weight:bold; font-size:0.9rem; line-height:1.5; }
+        .alert-success { background-color:rgba(0,255,128,0.08); border:1px solid var(--green); color:var(--green); }
+        .alert-error { background-color:rgba(220,20,60,0.14); border:1px solid var(--primary-crimson); color:var(--primary-red); }
+        .submitted-banner { background:rgba(0,255,128,0.06); border:1px solid var(--green); border-radius:4px; padding:14px 18px; color:var(--green); font-size:0.88rem; text-align:center; letter-spacing:1px; word-break:break-all; }
+        /* FizzBuzz gate */
+        .fizzbuzz-gate { background:rgba(0,240,255,0.04); border:1px solid rgba(0,240,255,0.3); border-radius:6px; padding:22px 26px; text-align:center; }
+        .fizzbuzz-gate-lbl { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-sub); margin-bottom:8px; }
+        .fizzbuzz-gate-msg { font-size:0.9rem; color:var(--cyan); line-height:1.5; margin-bottom:14px; letter-spacing:0.5px; }
+        .btn-fizzbuzz { display:inline-block; padding:13px 36px; background:linear-gradient(135deg,var(--cyan),#4b8cff); color:#00131a; font-family:'Courier New',monospace; font-size:0.95rem; font-weight:bold; text-transform:uppercase; letter-spacing:2px; border:none; border-radius:4px; cursor:pointer; text-decoration:none; transition:opacity 0.2s,transform 0.15s; }
+        .btn-fizzbuzz:hover { opacity:0.88; transform:translateY(-1px); }
+        /* ── AI Evaluation Card ── */
+        .eval-card { background:rgba(0,0,0,0.5); border:1px solid var(--border-mid); border-radius:6px; padding:24px 26px; }
+        .eval-card.evaluating { border-color:rgba(0,240,255,0.4); }
+        .eval-card.done { border-color:rgba(0,255,128,0.45); }
+        .eval-card.failed { border-color:rgba(220,20,60,0.4); }
+        .eval-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border-dark); }
+        .eval-spinner { width:16px; height:16px; border:2px solid rgba(0,240,255,0.2); border-top-color:var(--cyan); border-radius:50%; animation:spin 0.75s linear infinite; flex-shrink:0; }
+        @keyframes spin { to{transform:rotate(360deg)} }
+        .eval-status-label { font-size:0.72rem; letter-spacing:2px; text-transform:uppercase; color:var(--cyan); }
+        .eval-card.done .eval-status-label { color:var(--green); }
+        .eval-card.failed .eval-status-label { color:var(--primary-red); }
+        .eval-score-hero { display:flex; align-items:baseline; gap:8px; margin-bottom:16px; }
+        .eval-score-num { font-size:3rem; font-weight:900; color:var(--cyan); letter-spacing:2px; line-height:1; text-shadow:0 0 20px rgba(0,240,255,0.6); }
+        .eval-score-den { font-size:1rem; color:var(--text-sub); }
+        .eval-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:16px; }
+        .eval-cell { background:rgba(255,255,255,0.03); border:1px solid var(--border-dark); border-radius:4px; padding:10px 12px; }
+        .eval-cell-label { font-size:0.6rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-sub); margin-bottom:4px; }
+        .eval-cell-val { font-size:1.1rem; font-weight:700; color:var(--cyan); }
+        .eval-feedback-label { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--text-sub); margin-bottom:6px; }
+        .eval-feedback-text { font-size:0.88rem; color:var(--text-main); line-height:1.68; }
+        .eval-pending { font-size:0.88rem; color:var(--text-sub); text-align:center; padding:8px 0; letter-spacing:1px; }
+        
     </style>
 </head>
 <body>
-
     <header>
         <div class="brand">
             <h1>IMPOSTER PROJECT</h1>
@@ -80,8 +100,9 @@
 
     <div class="container">
         <div id="assignment-section">
-            <div class="state-card" id="assignment-loading">Loading your assignment...</div>
+            <div class="state-card">Loading your assignment...</div>
         </div>
+
         <div id="submission-section" style="display:none;">
             <div class="form-card">
                 <h2 class="section-header">Submit GitHub Repository</h2>
@@ -96,34 +117,55 @@
                 </form>
             </div>
         </div>
+
+        <!-- AI Evaluation Card — shown after submission -->
+        <div id="eval-section" style="display:none;">
+            <div id="eval-card" class="eval-card evaluating">
+                <div class="eval-header">
+                    <div class="eval-spinner" id="eval-spinner"></div>
+                    <span class="eval-status-label" id="eval-status-label">AI Evaluation Pending...</span>
+                </div>
+                <div class="eval-pending" id="eval-pending-msg">Your repository is being evaluated by AI. This may take up to 60 seconds.</div>
+                <div id="eval-results" style="display:none;">
+                    <div class="eval-score-hero">
+                        <span class="eval-score-num" id="eval-score-num">--</span>
+                        <span class="eval-score-den">/ 100</span>
+                    </div>
+                    <div class="eval-grid" id="eval-grid"></div>
+                    <div class="eval-feedback-label">AI Feedback</div>
+                    <div class="eval-feedback-text" id="eval-feedback-text"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- FizzBuzz Navigation Gate (Part 5) — shown after GitHub submission -->
+        <div id="fizzbuzz-section" style="display:none;">
+            <div class="fizzbuzz-gate">
+                <div class="fizzbuzz-gate-lbl">Next Round</div>
+                <div class="fizzbuzz-gate-msg" id="fizzbuzz-gate-msg">Repository submitted. Waiting for coordinator to start FizzBuzz.</div>
+                <a href="fizzbuzz.html" id="fizzbuzz-btn" class="btn-fizzbuzz" style="display:none;">ENTER FIZZBUZZ ROUND &rarr;</a>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Read participant_id from localStorage (set by homepage after successful auth).
-        // Fall back to sessionStorage imposterParticipant for backwards compatibility.
         var PARTICIPANT_ID = localStorage.getItem('participant_id') || sessionStorage.getItem('participant_id');
         if (!PARTICIPANT_ID) {
             var _s = sessionStorage.getItem('imposterParticipant');
             var _p = _s ? JSON.parse(_s) : null;
             PARTICIPANT_ID = _p && _p.id ? String(_p.id) : null;
         }
-        if (!PARTICIPANT_ID) {
-            window.location.href = 'homepage.html';
-        }
-        // PARTICIPANT_ID is a UUID string — never parse as integer
+        if (!PARTICIPANT_ID) { window.location.href = 'homepage.html'; }
 
-        var elapsedSeconds = 0;
-        var stopwatchEl    = document.getElementById('stopwatch');
-        var swInterval     = setInterval(tick, 1000);
-
-        function pad(n)  { return String(n).padStart(2, '0'); }
-        function tick()  { elapsedSeconds++; var h=Math.floor(elapsedSeconds/3600),m=Math.floor((elapsedSeconds%3600)/60),s=elapsedSeconds%60; stopwatchEl.innerText=pad(h)+':'+pad(m)+':'+pad(s); }
+        // stopwatch
+        var elapsedSeconds = 0, stopwatchEl = document.getElementById('stopwatch'), swInterval = setInterval(tick, 1000);
+        function pad(n){ return String(n).padStart(2,'0'); }
+        function tick(){ elapsedSeconds++; var h=Math.floor(elapsedSeconds/3600),m=Math.floor((elapsedSeconds%3600)/60),s=elapsedSeconds%60; stopwatchEl.innerText=pad(h)+':'+pad(m)+':'+pad(s); }
         function stopSW(){ clearInterval(swInterval); }
-        function getSW() { return stopwatchEl.innerText; }
+        function getSW(){ return stopwatchEl.innerText; }
 
-        function esc(str) {
-            return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-        }
+        function esc(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
         function renderAssignment(a) {
             var html =
@@ -145,21 +187,71 @@
                   '<div class="work-text">'+esc(a.work_description)+'</div>'+
                 '</div>';
             if (a.is_imposter) {
-                html +=
-                  '<div class="work-block secret">'+
-                    '<div class="work-block-label">&#9888; Secret Objective &mdash; Do Not Share</div>'+
-                    '<div class="work-role-title">The above is your SECRET task. Do not reveal it to anyone.</div>'+
-                  '</div>';
+                html += '<div class="work-block secret"><div class="work-block-label">&#9888; Secret Objective &mdash; Do Not Share</div><div class="work-role-title">The above is your SECRET task. Do not reveal it to anyone.</div></div>';
             }
             html += '</div>';
             document.getElementById('assignment-section').innerHTML = html;
         }
 
-        function lockForm(repo, ts) {
+        function showEvalPending() {
+            document.getElementById('eval-section').style.display = 'block';
+            document.getElementById('eval-card').className = 'eval-card evaluating';
+            document.getElementById('eval-spinner').style.display = 'block';
+            document.getElementById('eval-status-label').innerText = 'AI Evaluation In Progress...';
+            document.getElementById('eval-pending-msg').style.display = 'block';
+            document.getElementById('eval-results').style.display = 'none';
+        }
+
+        function showEvalResults(a) {
+            document.getElementById('eval-section').style.display = 'block';
+            var card = document.getElementById('eval-card');
+            card.className = 'eval-card done';
+            document.getElementById('eval-spinner').style.display = 'none';
+            document.getElementById('eval-status-label').innerText = 'AI Evaluation Complete';
+            document.getElementById('eval-pending-msg').style.display = 'none';
+            document.getElementById('eval-results').style.display = 'block';
+            document.getElementById('eval-score-num').innerText = a.ai_score != null ? a.ai_score : '--';
+            var breakdowns = [
+                { label:'UI Design',       val: a.ui_score,           max:20 },
+                { label:'Task Completion', val: a.task_match_score,   max:30 },
+                { label:'Logic & Code',    val: a.logic_score,        max:25 },
+                { label:'Creativity',      val: a.creativity_score,   max:15 },
+                { label:'Code Quality',    val: a.code_quality_score, max:10 }
+            ];
+            document.getElementById('eval-grid').innerHTML = breakdowns.map(function(b){
+                return '<div class="eval-cell"><div class="eval-cell-label">'+esc(b.label)+'</div><div class="eval-cell-val">'+(b.val!=null?b.val:'--')+'<span style="font-size:0.65rem;color:var(--text-sub);margin-left:2px;">/'+b.max+'</span></div></div>';
+            }).join('');
+            document.getElementById('eval-feedback-text').innerText = a.ai_feedback || '';
+        }
+
+        function lockForm(repo, ts, owner, repoName) {
             document.getElementById('submissionForm').style.display = 'none';
+            document.getElementById('githubUrl').disabled = true;
             var b = document.getElementById('already-submitted-banner');
-            b.innerText = '\u2713 Submitted' + (ts ? ' on '+new Date(ts).toLocaleString() : '') + '\n' + repo;
+            var repoLine = (owner && repoName) ? '\nRepository: '+owner+'/'+repoName : '\n'+repo;
+            var timeLine = ts ? '\nSubmitted at: '+new Date(ts).toLocaleTimeString() : '';
+            b.innerText = '\u2713 Submitted Successfully'+repoLine+timeLine;
             b.style.display = 'block';
+        }
+
+        // Poll for evaluation result (called after submission)
+        var pollTimer = null;
+        var pollAttempts = 0;
+        function startPolling() {
+            pollAttempts = 0;
+            showEvalPending();
+            pollTimer = setInterval(async function(){
+                pollAttempts++;
+                if (pollAttempts > 30) { clearInterval(pollTimer); return; } // stop after ~2.5 min
+                try {
+                    var res = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
+                    var data = await res.json();
+                    if (data.success && data.assignment && (data.assignment.submission_status === 'Evaluated' || data.assignment.evaluation_status === 'Evaluated')) {
+                        clearInterval(pollTimer);
+                        showEvalResults(data.assignment);
+                    }
+                } catch(e){}
+            }, 5000); // poll every 5s
         }
 
         async function loadAssignment() {
@@ -167,22 +259,26 @@
                 var res  = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
                 var data = await res.json();
                 if (!res.ok || !data.success) {
-                    document.getElementById('assignment-section').innerHTML =
-                        '<div class="state-card error">'+esc(data&&data.message?data.message:'Assignment not found.')+'</div>';
+                    document.getElementById('assignment-section').innerHTML = '<div class="state-card error">'+esc(data&&data.message?data.message:'Assignment not found.')+'</div>';
                     return;
                 }
-                renderAssignment(data.assignment);
+                var a = data.assignment;
+                renderAssignment(a);
                 document.getElementById('submission-section').style.display = 'block';
-                if (data.assignment.submission_status === 'Submitted' && data.assignment.github_repo) {
-                    lockForm(data.assignment.github_repo, data.assignment.submitted_at);
+
+                if (a.submission_status === 'Evaluated' || a.evaluation_status === 'Evaluated') {
+                    lockForm(a.github_repo, a.submitted_at, a.github_owner, a.github_repo_name);
+                    showEvalResults(a);
+                } else if ((a.submission_status === 'Submitted') && a.github_repo) {
+                    lockForm(a.github_repo, a.submitted_at, a.github_owner, a.github_repo_name);
+                    startPolling();
                 }
             } catch(e) {
-                document.getElementById('assignment-section').innerHTML =
-                    '<div class="state-card error">Unable to reach the server. Make sure the backend is running on localhost:3000.</div>';
+                document.getElementById('assignment-section').innerHTML = '<div class="state-card error">Unable to reach the server. Make sure the backend is running on localhost:3000.</div>';
             }
         }
 
-        document.getElementById('submissionForm').addEventListener('submit', async function(e) {
+        document.getElementById('submissionForm').addEventListener('submit', async function(e){
             e.preventDefault();
             var url      = document.getElementById('githubUrl').value.trim();
             var alertBox = document.getElementById('alertBox');
@@ -190,37 +286,50 @@
             var re       = /^https?:\/\/(www\.)?github\.com\/[A-Za-z0-9_.\-]+\/[A-Za-z0-9_.\-]+\/?$/;
 
             alertBox.style.display = 'none';
+
+            // Client-side URL format check
             if (!re.test(url)) {
                 alertBox.className = 'alert-box alert-error';
-                alertBox.innerText = 'INVALID LINK - Enter a valid GitHub repository URL.\ne.g. https://github.com/username/repository';
+                alertBox.innerText = 'Please enter a valid GitHub repository URL.\ne.g. https://github.com/username/repository';
                 alertBox.style.display = 'block';
                 return;
             }
 
             btn.disabled = true;
-            btn.textContent = 'SUBMITTING...';
+            btn.textContent = 'VERIFYING REPOSITORY...';
             stopSW();
-            var finalTime = getSW();
 
             try {
                 var res  = await fetch('http://localhost:3000/api/submit-github', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ participant_id: PARTICIPANT_ID, github_repo: url, elapsed_time: finalTime })
+                    method: 'POST', headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ participant_id: PARTICIPANT_ID, github_repo: url })
                 });
                 var data = await res.json();
 
-                if ((res.ok && data && data.success) || res.status === 409) {
-                    lockForm(url, new Date().toISOString());
+                // Already submitted
+                if (res.status === 409) {
+                    lockForm(data.github_repo || url, null, null, null);
+                    startPolling();
                     return;
                 }
 
+                // Success
+                if (res.ok && data && data.success) {
+                    var repoMeta = data.repository || {};
+                    btn.textContent = 'Submitted Successfully';
+                    lockForm(url, new Date().toISOString(), repoMeta.owner, repoMeta.name);
+                    startPolling();
+                    return;
+                }
+
+                // Error from backend — show red box, do NOT clear input
                 alertBox.className = 'alert-box alert-error';
                 alertBox.innerText = (data && data.message) ? data.message : 'Submission failed. Try again.';
                 alertBox.style.display = 'block';
                 btn.disabled = false;
                 btn.textContent = 'Submit Link for Evaluation';
                 swInterval = setInterval(tick, 1000);
+
             } catch(err) {
                 alertBox.className = 'alert-box alert-error';
                 alertBox.innerText = 'Unable to reach the server. Make sure the backend is running on localhost:3000.';
@@ -232,7 +341,96 @@
         });
 
         loadAssignment();
-    </script>
 
+        // ── FizzBuzz gate: polls /api/fizzbuzz/toggle every 3s after submission ──
+        // Shows the ENTER FIZZBUZZ ROUND button live when coordinator toggles ON.
+        var _fbGateInterval = null;
+        var _fbGateActive   = false;
+
+        function showFizzBuzzGate() {
+            var sec = document.getElementById('fizzbuzz-section');
+            if (sec) sec.style.display = 'block';
+        }
+
+        function updateFizzBuzzGateUI(fizzbuzzOpen, status) {
+            var btn = document.getElementById('fizzbuzz-btn');
+            var msg = document.getElementById('fizzbuzz-gate-msg');
+            showFizzBuzzGate();
+
+            if (fizzbuzzOpen) {
+                // FizzBuzz is ON — show neon button
+                if (msg) {
+                    msg.innerText = '✅ Repository Submitted Successfully. FizzBuzz round is now OPEN!';
+                    msg.style.color = 'var(--cyan)';
+                }
+                if (btn) {
+                    btn.style.display   = 'inline-block';
+                    btn.style.opacity   = '1';
+                    btn.style.cursor    = 'pointer';
+                    btn.textContent     = 'ENTER FIZZBUZZ ROUND →';
+                    btn.onclick         = null; // restore default navigation
+                    btn.href            = 'fizzbuzz.html';
+                }
+            } else if (status === 'finished') {
+                if (msg) {
+                    msg.innerText     = 'FizzBuzz round has ended.';
+                    msg.style.color   = 'var(--primary-red, #ff1e42)';
+                }
+                if (btn) {
+                    btn.style.display = 'inline-block';
+                    btn.style.opacity = '0.4';
+                    btn.style.cursor  = 'not-allowed';
+                    btn.textContent   = 'FizzBuzz Closed';
+                    btn.onclick       = function(e){ e.preventDefault(); };
+                }
+                clearInterval(_fbGateInterval); // no need to keep polling
+            } else {
+                // FizzBuzz is OFF / waiting
+                if (msg) {
+                    msg.innerText   = '✅ Repository Submitted Successfully.\nWaiting for Coordinator to open FizzBuzz...';
+                    msg.style.color = '';
+                }
+                if (btn) btn.style.display = 'none';
+            }
+        }
+
+        async function checkFizzBuzzGate() {
+            try {
+                var r    = await fetch('http://localhost:3000/api/fizzbuzz/toggle');
+                var data = await r.json();
+                if (!data.success) return;
+                updateFizzBuzzGateUI(data.fizzbuzz_open, data.status);
+            } catch(e){}
+        }
+
+        // Override lockForm to start gate polling as soon as submission is locked
+        var _origLockForm = lockForm;
+        lockForm = function(repo, ts, owner, repoName) {
+            _origLockForm(repo, ts, owner, repoName);
+            if (!_fbGateActive) {
+                _fbGateActive = true;
+                showFizzBuzzGate();
+                checkFizzBuzzGate(); // immediate check
+                _fbGateInterval = setInterval(checkFizzBuzzGate, 3000); // poll every 3s
+            }
+        };
+
+        // On page load: if already submitted, show gate immediately and start polling
+        (async function initGate(){
+            try {
+                var res  = await fetch('http://localhost:3000/api/my-assignment/'+PARTICIPANT_ID);
+                var data = await res.json();
+                if (data.success && data.assignment &&
+                    (data.assignment.submission_status === 'Submitted' ||
+                     data.assignment.submission_status === 'Evaluated') &&
+                    data.assignment.github_repo) {
+                    _fbGateActive = true;
+                    showFizzBuzzGate();
+                    checkFizzBuzzGate();
+                    _fbGateInterval = setInterval(checkFizzBuzzGate, 3000);
+                }
+            } catch(e){}
+        })();
+    </script>
 </body>
 </html>

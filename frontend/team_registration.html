@@ -75,7 +75,34 @@
             text-align: center;
             color: var(--accent);
             font-size: 1.4rem;
-            margin: 0 0 24px;
+            margin: 0 0 12px;
+        }
+
+        .admin-dash-btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px 14px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            border-radius: 10px;
+            color: var(--accent);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+        }
+
+        .admin-dash-btn:hover {
+            background: rgba(0, 240, 255, 0.16);
+            box-shadow: 0 0 22px rgba(0, 240, 255, 0.45);
+            transform: translateY(-1px);
         }
 
         .sidebar-nav { display: flex; flex-direction: column; gap: 10px; }
@@ -495,6 +522,9 @@
         <div class="dashboard-shell">
             <aside class="dashboard-sidebar">
                 <h1 class="brand">Imposter</h1>
+                <a href="admindashboard.html" class="admin-dash-btn">
+                    &#9881; Admin Dashboard
+                </a>
                 <div class="sidebar-nav">
                     <button class="nav-btn active" data-section="team-registration">Team Registration</button>
                     <button class="nav-btn" data-section="registered-teams">Registered Teams</button>
